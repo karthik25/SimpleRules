@@ -10,5 +10,11 @@ namespace SimpleRules.Tests
         {
 
         }
+
+        [TestMethod]
+        public void CanGenerateRegexRules()
+        {
+
+        }
     }
 }
