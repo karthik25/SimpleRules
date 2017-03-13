@@ -1,5 +1,6 @@
 ﻿using SimpleRules.Attributes;
 using SimpleRules.Contracts;
+using SimpleRules.Generic;
 using System;
 using System.Linq.Expressions;
 
@@ -14,7 +15,7 @@ namespace SimpleRules.Handlers
 
         public bool Handles(BaseRuleAttribute attribute)
         {
-            throw new NotImplementedException();
+            return typeof(RelationalOperatorAttribute).IsAssignableFrom(attribute.GetType());
         }
     }
 }

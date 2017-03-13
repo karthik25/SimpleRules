@@ -3,6 +3,8 @@ using SimpleRules.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SimpleRules.Contracts;
+using SimpleRules.Exceptions;
 
 namespace SimpleRules
 {
@@ -50,7 +52,10 @@ namespace SimpleRules
 
         private static PropertyInfo GetMatchingPropertyInfo(this PropertyInfo srcProperty, IEnumerable<PropertyInfo> metaProperties)
         {
-            return metaProperties.SingleOrDefault(s => (s.Name == srcProperty.Name && s.PropertyType == srcProperty.PropertyType) || (s.Name == srcProperty.Name && s.PropertyType == typeof(object)));
+            return metaProperties.SingleOrDefault(s => 
+                        s.Name == srcProperty.Name && 
+                        (s.PropertyType == srcProperty.PropertyType || 
+                        s.PropertyType == typeof(object)));
         }
         
         public static bool All(this List<ValidationResult> results)
@@ -61,7 +66,22 @@ namespace SimpleRules
         public static bool Any(this List<ValidationResult> results)
         {
             return results.Any(r => r.IsError);
-        }        
+        }
+
+        public static Type GetMetadataType(this Dictionary<Type, Type> typeMetaDictionary, Type srcType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IHandler FindHandler(this Dictionary<Type, IHandler> attrHandlerMapping, BaseRuleAttribute attribute)
+        {
+            var handler = attrHandlerMapping.Values.SingleOrDefault(h => h.Handles(attribute));
+            if (handler == null)
+            {
+                throw new HandlerNotFoundException(attribute.GetType().Name, attribute.GetType().FullName);
+            }
+            return handler;
+        }
 
         private static BindingFlags publicPropFlags = BindingFlags.Instance | BindingFlags.Public;
     }

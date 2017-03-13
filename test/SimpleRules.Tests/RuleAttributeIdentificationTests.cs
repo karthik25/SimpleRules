@@ -69,6 +69,18 @@ namespace SimpleRules.Tests
             var notEqualAttrs = rules.Where(r => r.Is<NotEqualToAttribute>());
             Assert.AreEqual(3, notEqualAttrs.Count());
         }
+
+        [TestMethod]
+        public void CanIdentifyMetadataTypeIfPresent()
+        {
+
+        }
+
+        [TestMethod]
+        public void CanIdentifyMetadataAsNullIfNotPresent()
+        {
+            
+        }
     }
 
     public class Employee
@@ -102,7 +114,7 @@ namespace SimpleRules.Tests
     public class EmployeeMetadata
     {
         [GreaterThan("", constantValue: 0)]
-        public int Id { get; set; }
+        public object Id { get; set; }
         [NotEqualTo("", RuleType.Error)]
         [NotEqualTo(null, RuleType.Error)]
         public string Name { get; set; }
