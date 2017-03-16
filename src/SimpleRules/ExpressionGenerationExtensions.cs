@@ -1,15 +1,15 @@
-﻿using SimpleRules.Attributes;
+﻿using System;
+using SimpleRules.Attributes;
 using SimpleRules.Contracts;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SimpleRules
 {
     public static class ExpressionGenerationExtensions
     {
-        public static LambdaExpression ProcessRule(this Dictionary<Type, IHandler> handlerDictionary, 
-                                                        BaseRuleAttribute attribute)
+        public static EvaluatedRule ProcessRule(this Dictionary<Type, IHandler> handlerDictionary, 
+                                                        BaseRuleAttribute attribute, PropertyInfo targetProp)
         {
             throw new NotImplementedException();
         }

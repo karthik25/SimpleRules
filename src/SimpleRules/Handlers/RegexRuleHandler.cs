@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq.Expressions;
 using SimpleRules.Attributes;
 using SimpleRules.Contracts;
+using System.Reflection;
 
 namespace SimpleRules.Handlers
 {
     public class RegexRuleHandler : IHandler
     {
-        public LambdaExpression GenerateExpression(BaseRuleAttribute attribute)
+        public EvaluatedRule GenerateEvaluatedRule(BaseRuleAttribute attribute, PropertyInfo targetProp)
         {
             throw new NotImplementedException();
         }

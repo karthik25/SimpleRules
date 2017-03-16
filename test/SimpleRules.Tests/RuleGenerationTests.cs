@@ -11,7 +11,7 @@ namespace SimpleRules.Tests
     public class RuleGenerationTests
     {
         [TestMethod]
-        public void CanGenerateSimpleRules()
+        public void CanGenerateSimpleRule()
         {
             var users = new List<User>
             {
@@ -25,7 +25,7 @@ namespace SimpleRules.Tests
             var first = results.First();
             Assert.AreEqual(1001, first.Key);
             Assert.AreEqual(1, first.Errors.Count);
-            Assert.AreEqual("Registration Date is less than Last Login Date for entity with Id 1001", first.Errors[0]);
+            Assert.AreEqual("RegistrationDate is less than LastLoginDate", first.Errors[0]);
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace SimpleRules.Tests
     {
         public int Id { get; set; }
         public DateTime RegistrationDate { get; set; }
-        public DateTime? LastLoginDate { get; set; }
+        public DateTime LastLoginDate { get; set; }
     }
 
     public class UserMetadata
@@ -48,6 +48,6 @@ namespace SimpleRules.Tests
         public int Id { get; set; }
 
         [GreaterThan("RegistrationDate")]
-        public DateTime? LastLoginDate { get; set; }
+        public DateTime LastLoginDate { get; set; }
     }
 }

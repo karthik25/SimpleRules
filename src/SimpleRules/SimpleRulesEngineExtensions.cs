@@ -29,6 +29,13 @@ namespace SimpleRules
                        .Any();
         }
 
+        public static Type FindRuleMetadataType(this Type type)
+        {
+            var ruleMetaAttr = type.GetCustomAttribute<RuleMetadataAttribute>();
+            return ruleMetaAttr.MetaFor;
+        }
+
+        // todo: should return a Tuple<BaseRuleAttribute, PropertyInfo>
         public static List<BaseRuleAttribute> GetRules(this Type srcType)
         {
             return srcType.GetProperties(publicPropFlags)
@@ -36,6 +43,7 @@ namespace SimpleRules
                           .ToList();
         }
 
+        // todo: should return a Tuple<BaseRuleAttribute, PropertyInfo>
         public static List<BaseRuleAttribute> GetRules(this Type srcType, Type metadataType)
         {
             var srcProperties = srcType.GetProperties(publicPropFlags);
@@ -70,7 +78,16 @@ namespace SimpleRules
 
         public static Type GetMetadataType(this Dictionary<Type, Type> typeMetaDictionary, Type srcType)
         {
-            throw new NotImplementedException();
+            if (typeMetaDictionary.ContainsKey(srcType))
+                return typeMetaDictionary[srcType];
+
+            if (srcType.HasRuleMetadataAttribute())
+                return srcType.FindRuleMetadataType();
+
+            if (srcType.HasRuleAttributes())
+                return srcType;
+
+            return null;
         }
 
         public static IHandler FindHandler(this Dictionary<Type, IHandler> attrHandlerMapping, BaseRuleAttribute attribute)

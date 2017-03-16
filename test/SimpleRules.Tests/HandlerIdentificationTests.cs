@@ -37,11 +37,29 @@ namespace SimpleRules.Tests
         public void CanThrowExceptionsForUnkownAttributes()
         {
             var dictionary = new Dictionary<Type, IHandler>();
-            var type = typeof(Employee);
+            var type = typeof (Employee);
             var ruleAttributes = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                      .SelectMany(p => p.GetCustomAttributes<BaseRuleAttribute>())
                                      .ToList();
             var handler = dictionary.FindHandler(ruleAttributes.First());
         }
+
+        [TestMethod]
+        public void CanGenerateEvaluatedRuleForGreaterThanAttribute()
+        {
+            var handler = new SimpleRuleHandler();
+            var targetProp = typeof (Registration).GetProperty("EndDate");
+            var greaterThanAttribute = new GreaterThanAttribute("StartDate");
+            var evaluatedRule = handler.GenerateEvaluatedRule(greaterThanAttribute, targetProp);
+            Assert.IsNotNull(evaluatedRule);
+            Assert.AreEqual("EndDate should be greater than the StartDate", evaluatedRule.MessageFormat);
+            Assert.IsNotNull(evaluatedRule.Expression);
+        }
+    }
+
+    public class Registration
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

@@ -1,16 +1,27 @@
 ﻿using SimpleRules.Attributes;
 using SimpleRules.Contracts;
 using SimpleRules.Generic;
-using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SimpleRules.Handlers
 {
     public class SimpleRuleHandler : IHandler
     {
-        public LambdaExpression GenerateExpression(BaseRuleAttribute attribute)
+        public EvaluatedRule GenerateEvaluatedRule(BaseRuleAttribute attribute, PropertyInfo targetProp)
         {
-            throw new NotImplementedException();
+            var relationalAttr = attribute as RelationalOperatorAttribute;
+            var input = Expression.Parameter(targetProp.DeclaringType, "i");
+            var leftExpr = Expression.PropertyOrField(input, targetProp.Name);
+            var rightExpr = Expression.PropertyOrField(input, relationalAttr.OtherPropertyName);
+            var binaryExpr = Expression.MakeBinary(relationalAttr.SupportedType, leftExpr, rightExpr);
+            var lambdaExpr = Expression.Lambda(binaryExpr, input);
+            var message = string.Format("{0} should be {1} than the {2}", targetProp.Name, "greater", relationalAttr.OtherPropertyName);
+            return new EvaluatedRule
+            {
+                MessageFormat = message,
+                Expression = lambdaExpr
+            };
         }
 
         public bool Handles(BaseRuleAttribute attribute)

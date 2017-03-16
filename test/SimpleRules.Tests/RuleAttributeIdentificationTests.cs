@@ -2,6 +2,7 @@
 using SimpleRules.Attributes;
 using SimpleRules.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SimpleRules.Tests
@@ -31,6 +32,15 @@ namespace SimpleRules.Tests
             var srcType = typeof(EmployeeWithMetaAttribute);
             var result = srcType.HasRuleMetadataAttribute();
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void CanIdentifyTheAssociatedRuleMetaType()
+        {
+            var srcType = typeof(EmployeeWithMetaAttribute);
+            var result = srcType.FindRuleMetadataType();
+            Assert.IsNotNull(result);
+            Assert.AreEqual(typeof (EmployeeMetadata), result);
         }
 
         [TestMethod]
@@ -71,15 +81,49 @@ namespace SimpleRules.Tests
         }
 
         [TestMethod]
-        public void CanIdentifyMetadataTypeIfPresent()
+        public void CanIdentifyMetadataTypeIfPresentFromRegistration()
         {
+            var concreteType = typeof (Employee);
+            var metaType = typeof (EmployeeMetadata);
+            var dictionary = new Dictionary<Type, Type>();
+            dictionary.Add(concreteType, metaType);
 
+            var requiredMetadata = dictionary.GetMetadataType(concreteType);
+            Assert.IsNotNull(requiredMetadata);
+            Assert.AreEqual(metaType, requiredMetadata);
+        }
+
+        [TestMethod]
+        public void CanIdentifyMetadataTypeWithMetaAttribute()
+        {
+            var concreteType = typeof(EmployeeWithMetaAttribute);
+            var metaType = typeof(EmployeeMetadata);
+            var dictionary = new Dictionary<Type, Type>();
+
+            var requiredMetadata = dictionary.GetMetadataType(concreteType);
+            Assert.IsNotNull(requiredMetadata);
+            Assert.AreEqual(metaType, requiredMetadata);
+        }
+
+        [TestMethod]
+        public void CanIdentifyMetadataTypeInline()
+        {
+            var concreteType = typeof(Employee);
+            var dictionary = new Dictionary<Type, Type>();
+
+            var requiredMetadata = dictionary.GetMetadataType(concreteType);
+            Assert.IsNotNull(requiredMetadata);
+            Assert.AreEqual(concreteType, requiredMetadata);
         }
 
         [TestMethod]
         public void CanIdentifyMetadataAsNullIfNotPresent()
         {
-            
+            var concreteType = typeof(User);
+            var dictionary = new Dictionary<Type, Type>();
+
+            var requiredMetadata = dictionary.GetMetadataType(concreteType);
+            Assert.IsNull(requiredMetadata);
         }
     }
 

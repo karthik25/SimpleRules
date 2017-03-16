@@ -1,11 +1,11 @@
 ﻿using SimpleRules.Attributes;
-using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SimpleRules.Contracts
 {
     public interface IHandler
     {
         bool Handles(BaseRuleAttribute attribute);
-        LambdaExpression GenerateExpression(BaseRuleAttribute attribute);
+        EvaluatedRule GenerateEvaluatedRule(BaseRuleAttribute attribute, PropertyInfo targetProp);
     }
 }

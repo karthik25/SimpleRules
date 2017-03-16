@@ -2,6 +2,7 @@
 
 namespace SimpleRules.Attributes
 {
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class RuleMetadataAttribute : Attribute
     {
         private readonly Type _type;
