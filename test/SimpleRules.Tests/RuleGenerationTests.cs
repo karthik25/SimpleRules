@@ -25,7 +25,7 @@ namespace SimpleRules.Tests
             var first = results.First();
             Assert.AreEqual(1001, first.Key);
             Assert.AreEqual(1, first.Errors.Count);
-            Assert.AreEqual("LastLoginDate should be greater than the RegistrationDate", first.Errors[0]);
+            Assert.AreEqual("Last Login Date should be greater than the Registration Date", first.Errors[0]);
         }
 
         [TestMethod]

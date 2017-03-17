@@ -16,7 +16,7 @@ namespace SimpleRules.Handlers
             var rightExpr = Expression.PropertyOrField(input, relationalAttr.OtherPropertyName);
             var binaryExpr = Expression.MakeBinary(relationalAttr.SupportedType, leftExpr, rightExpr);
             var lambdaExpr = Expression.Lambda(binaryExpr, input);
-            var message = string.Format("{0} should be {1} than the {2}", targetProp.Name, "greater", relationalAttr.OtherPropertyName);
+            var message = string.Format("{0} should be {1} than the {2}", targetProp.Name.AddSpaces(), "greater", relationalAttr.OtherPropertyName.AddSpaces());
             return new EvaluatedRule
             {
                 MessageFormat = message,
