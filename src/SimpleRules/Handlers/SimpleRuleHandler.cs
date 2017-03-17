@@ -8,10 +8,10 @@ namespace SimpleRules.Handlers
 {
     public class SimpleRuleHandler : IHandler
     {
-        public EvaluatedRule GenerateEvaluatedRule(BaseRuleAttribute attribute, PropertyInfo targetProp)
+        public EvaluatedRule GenerateEvaluatedRule<TConcrete>(BaseRuleAttribute attribute, PropertyInfo targetProp)
         {
             var relationalAttr = attribute as RelationalOperatorAttribute;
-            var input = Expression.Parameter(targetProp.DeclaringType, "i");
+            var input = Expression.Parameter(typeof(TConcrete), "i");
             var leftExpr = Expression.PropertyOrField(input, targetProp.Name);
             var rightExpr = Expression.PropertyOrField(input, relationalAttr.OtherPropertyName);
             var binaryExpr = Expression.MakeBinary(relationalAttr.SupportedType, leftExpr, rightExpr);

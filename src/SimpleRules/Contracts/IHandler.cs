@@ -6,6 +6,6 @@ namespace SimpleRules.Contracts
     public interface IHandler
     {
         bool Handles(BaseRuleAttribute attribute);
-        EvaluatedRule GenerateEvaluatedRule(BaseRuleAttribute attribute, PropertyInfo targetProp);
+        EvaluatedRule GenerateEvaluatedRule<T>(BaseRuleAttribute attribute, PropertyInfo targetProp);
     }
 }

@@ -108,6 +108,13 @@ namespace SimpleRules
             return handler;
         }
 
+        public static IEnumerable<Tuple<BaseRuleAttribute, PropertyInfo>> GetRules(this Tuple<Type, Type> metaMapping)
+        {
+            if (metaMapping.Item1 == metaMapping.Item2)
+                return metaMapping.Item1.GetRules();
+            return metaMapping.Item1.GetRules(metaMapping.Item2);
+        }
+
         private static BindingFlags publicPropFlags = BindingFlags.Instance | BindingFlags.Public;
     }
 }

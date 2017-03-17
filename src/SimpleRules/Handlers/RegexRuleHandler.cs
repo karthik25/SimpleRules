@@ -7,7 +7,7 @@ namespace SimpleRules.Handlers
 {
     public class RegexRuleHandler : IHandler
     {
-        public EvaluatedRule GenerateEvaluatedRule(BaseRuleAttribute attribute, PropertyInfo targetProp)
+        public EvaluatedRule GenerateEvaluatedRule<T>(BaseRuleAttribute attribute, PropertyInfo targetProp)
         {
             throw new NotImplementedException();
         }

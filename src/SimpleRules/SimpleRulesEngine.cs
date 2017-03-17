@@ -3,6 +3,9 @@ using SimpleRules.Contracts;
 using SimpleRules.Attributes;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Linq;
+using SimpleRules.Generic;
+using SimpleRules.Handlers;
 
 namespace SimpleRules
 {
@@ -17,7 +20,29 @@ namespace SimpleRules
         public IEnumerable<ValidationResult> Validate<TConcrete>(List<TConcrete> src)
             where TConcrete : class
         {
-            throw new NotImplementedException();
+            if (!attrHandlerMapping.Any())
+                AddDefaultHandlers();
+
+            var rules = GetRules<TConcrete>();
+            foreach (var item in src)
+            {
+                var validationResult = new ValidationResult();
+                foreach (var rule in rules)
+                {
+                    var message = rule.MessageFormat;
+                    var compiledExpression = GetCompiledRule<TConcrete>(rule.Expression);
+                    if (!compiledExpression(item))
+                    {
+                        validationResult.Errors.Add(message);
+                    }
+                }
+                yield return validationResult;
+            }
+        }
+
+        private void AddDefaultHandlers()
+        {
+            attrHandlerMapping.Add(typeof(RelationalOperatorAttribute), new SimpleRuleHandler());
         }
 
         public SimpleRulesEngine RegisterMetadata<TConcrete, TMeta>()
@@ -35,16 +60,33 @@ namespace SimpleRules
             throw new NotImplementedException();
         }
 
-        private EvaluatedRule[] GetRules(Type type)
+        private EvaluatedRule[] GetRules<TConcrete>()
         {
-            if (typeMetaCache.ContainsKey(type))
+            var type = typeof (TConcrete);
+
+            if (typeRulesCache.ContainsKey(type))
                 return typeRulesCache[type];
 
             var metaDataType = typeMetaCache.GetMetadataType(type);
             if (metaDataType == null)
                 throw new Exception(string.Format("Unable to identify rule metadata for the entity: {0}", type.FullName));
 
-            return null;
+            var rulePropertyMap = metaDataType.GetRules()
+                                              .Select(m => attrHandlerMapping.ProcessRule<TConcrete>(m.Item1, m.Item2))
+                                              .ToArray();
+            typeRulesCache[type] = rulePropertyMap;
+            return rulePropertyMap;
+        }
+
+        private Func<T, bool> GetCompiledRule<T>(LambdaExpression expression)
+            where T:class
+        {
+            return GetFunc<T>(expression.Compile());
+        }
+
+        private static Func<T, bool> GetFunc<T>(Delegate funcDelegate)
+        {
+            return (Func<T, bool>)funcDelegate;
         }
     }
 }
