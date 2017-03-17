@@ -34,28 +34,36 @@ namespace SimpleRules
             var ruleMetaAttr = type.GetCustomAttribute<RuleMetadataAttribute>();
             return ruleMetaAttr.MetaFor;
         }
-
-        // todo: should return a Tuple<BaseRuleAttribute, PropertyInfo>
-        public static List<BaseRuleAttribute> GetRules(this Type srcType)
+        
+        public static IEnumerable<Tuple<BaseRuleAttribute, PropertyInfo>> GetRules(this Type srcType)
         {
-            return srcType.GetProperties(publicPropFlags)
-                          .SelectMany(p => p.GetCustomAttributes<BaseRuleAttribute>(false))
-                          .ToList();
+            var propList = srcType.GetProperties(publicPropFlags)
+                                  .Where(p => p.GetCustomAttributes<BaseRuleAttribute>().Any());
+            foreach (var prop in propList)
+            {
+                var attrs = prop.GetCustomAttributes<BaseRuleAttribute>();
+                foreach (var attr in attrs)
+                {
+                    yield return new Tuple<BaseRuleAttribute, PropertyInfo>(attr, prop);
+                }
+            }
         }
 
-        // todo: should return a Tuple<BaseRuleAttribute, PropertyInfo>
-        public static List<BaseRuleAttribute> GetRules(this Type srcType, Type metadataType)
+        public static IEnumerable<Tuple<BaseRuleAttribute, PropertyInfo>> GetRules(this Type srcType, Type metadataType)
         {
             var srcProperties = srcType.GetProperties(publicPropFlags);
             var metaProperties = metadataType.GetProperties(publicPropFlags);
             var matchedMetaProperties = srcProperties
                                            .Select(p => p.GetMatchingPropertyInfo(metaProperties))
                                            .Where(r => r != null);
-            var ruleAttributes = 
-                        matchedMetaProperties
-                            .SelectMany(p => p.GetCustomAttributes<BaseRuleAttribute>())
-                            .ToList();
-            return ruleAttributes;
+            foreach (var prop in matchedMetaProperties)
+            {
+                var attrs = prop.GetCustomAttributes<BaseRuleAttribute>();
+                foreach (var attr in attrs)
+                {
+                    yield return new Tuple<BaseRuleAttribute, PropertyInfo>(attr, prop);
+                }
+            }
         }
 
         private static PropertyInfo GetMatchingPropertyInfo(this PropertyInfo srcProperty, IEnumerable<PropertyInfo> metaProperties)
@@ -76,16 +84,16 @@ namespace SimpleRules
             return results.Any(r => r.IsError);
         }
 
-        public static Type GetMetadataType(this Dictionary<Type, Type> typeMetaDictionary, Type srcType)
+        public static Tuple<Type, Type> GetMetadataType(this Dictionary<Type, Type> typeMetaDictionary, Type srcType)
         {
             if (typeMetaDictionary.ContainsKey(srcType))
-                return typeMetaDictionary[srcType];
+                return new Tuple<Type, Type>(srcType, typeMetaDictionary[srcType]);
 
             if (srcType.HasRuleMetadataAttribute())
-                return srcType.FindRuleMetadataType();
+                return new Tuple<Type, Type>(srcType, srcType.FindRuleMetadataType());
 
             if (srcType.HasRuleAttributes())
-                return srcType;
+                return new Tuple<Type, Type>(srcType, srcType);
 
             return null;
         }

@@ -50,18 +50,18 @@ namespace SimpleRules.Tests
             var result = srcType.HasRuleMetadataAttribute();
             Assert.IsFalse(result);
         }
-
+        
         [TestMethod]
         public void CanIdentifyRulesUsingAttributes()
         {
             var srcType = typeof(Employee);
-            var rules = srcType.GetRules();
+            var rules = srcType.GetRules().ToList();
             Assert.AreEqual(7, rules.Count);
-            var greaterThanAttrs = rules.Where(r => r.Is<GreaterThanAttribute>());
+            var greaterThanAttrs = rules.Select(r => r.Item1).Where(r => r.Is<GreaterThanAttribute>());
             Assert.AreEqual(3, greaterThanAttrs.Count());
-            var greaterThanEqualAttrs = rules.Where(r => r.Is<GreaterThanOrEqualAttribute>());
+            var greaterThanEqualAttrs = rules.Select(r => r.Item1).Where(r => r.Is<GreaterThanOrEqualAttribute>());
             Assert.AreEqual(1, greaterThanEqualAttrs.Count());
-            var notEqualAttrs = rules.Where(r => r.Is<NotEqualToAttribute>());
+            var notEqualAttrs = rules.Select(r => r.Item1).Where(r => r.Is<NotEqualToAttribute>());
             Assert.AreEqual(3, notEqualAttrs.Count());
         }
 
@@ -70,13 +70,13 @@ namespace SimpleRules.Tests
         {
             var srcType = typeof(EmployeeWithMetaAttribute);
             var metaType = typeof(EmployeeMetadata);
-            var rules = srcType.GetRules(metaType);
+            var rules = srcType.GetRules(metaType).ToList();
             Assert.AreEqual(7, rules.Count);
-            var greaterThanAttrs = rules.Where(r => r.Is<GreaterThanAttribute>());
+            var greaterThanAttrs = rules.Select(r => r.Item1).Where(r => r.Is<GreaterThanAttribute>());
             Assert.AreEqual(3, greaterThanAttrs.Count());
-            var greaterThanEqualAttrs = rules.Where(r => r.Is<GreaterThanOrEqualAttribute>());
+            var greaterThanEqualAttrs = rules.Select(r => r.Item1).Where(r => r.Is<GreaterThanOrEqualAttribute>());
             Assert.AreEqual(1, greaterThanEqualAttrs.Count());
-            var notEqualAttrs = rules.Where(r => r.Is<NotEqualToAttribute>());
+            var notEqualAttrs = rules.Select(r => r.Item1).Where(r => r.Is<NotEqualToAttribute>());
             Assert.AreEqual(3, notEqualAttrs.Count());
         }
 
@@ -90,7 +90,7 @@ namespace SimpleRules.Tests
 
             var requiredMetadata = dictionary.GetMetadataType(concreteType);
             Assert.IsNotNull(requiredMetadata);
-            Assert.AreEqual(metaType, requiredMetadata);
+            Assert.AreEqual(metaType, requiredMetadata.Item2);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace SimpleRules.Tests
 
             var requiredMetadata = dictionary.GetMetadataType(concreteType);
             Assert.IsNotNull(requiredMetadata);
-            Assert.AreEqual(metaType, requiredMetadata);
+            Assert.AreEqual(metaType, requiredMetadata.Item2);
         }
 
         [TestMethod]
@@ -113,7 +113,8 @@ namespace SimpleRules.Tests
 
             var requiredMetadata = dictionary.GetMetadataType(concreteType);
             Assert.IsNotNull(requiredMetadata);
-            Assert.AreEqual(concreteType, requiredMetadata);
+            Assert.AreEqual(concreteType, requiredMetadata.Item1);
+            Assert.AreEqual(concreteType, requiredMetadata.Item2);
         }
 
         [TestMethod]
