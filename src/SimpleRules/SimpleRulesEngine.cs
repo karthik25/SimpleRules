@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using SimpleRules.Generic;
 using SimpleRules.Handlers;
+using System.Reflection;
 
 namespace SimpleRules
 {
     public class SimpleRulesEngine
     {
         private readonly Dictionary<Type, EvaluatedRule[]> typeRulesCache = new Dictionary<Type, EvaluatedRule[]>();
+        private readonly Dictionary<Type, PropertyInfo> entityKeyCache = new Dictionary<Type, PropertyInfo>();
         private readonly Dictionary<Type, Type> typeMetaCache = new Dictionary<Type, Type>();
         private readonly Dictionary<Type, IHandler> attrHandlerMapping = new Dictionary<Type, IHandler>();
 
@@ -27,6 +29,12 @@ namespace SimpleRules
             foreach (var item in src)
             {
                 var validationResult = new ValidationResult();
+                if (entityKeyCache.ContainsKey(typeof(TConcrete)))
+                {
+                    var propertyInfo = entityKeyCache[typeof (TConcrete)];
+                    var keyValue = propertyInfo.GetValue(item);
+                    validationResult.Key = keyValue;
+                }
                 foreach (var rule in rules)
                 {
                     var message = rule.MessageFormat;
@@ -70,6 +78,12 @@ namespace SimpleRules
             var metaDataType = typeMetaCache.GetMetadataType(type);
             if (metaDataType == null)
                 throw new Exception(string.Format("Unable to identify rule metadata for the entity: {0}", type.FullName));
+
+            var entityKeyProp = metaDataType.FindEntityKeyPropertyInfo();
+            if (entityKeyProp != null)
+            {
+                entityKeyCache.Add(type, entityKeyProp);
+            }
 
             var rulePropertyMap = metaDataType.GetRules()
                                               .Select(m => attrHandlerMapping.ProcessRule<TConcrete>(m.Item1, m.Item2))

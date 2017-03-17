@@ -98,6 +98,32 @@ namespace SimpleRules
             return null;
         }
 
+        public static PropertyInfo FindEntityKeyPropertyInfo(this Tuple<Type, Type> ruleMetaMap)
+        {
+            if (ruleMetaMap.Item1 == ruleMetaMap.Item2)
+            {
+                var propertyWithEntityKeyAttr = ruleMetaMap.Item1
+                                                           .GetProperties(publicPropFlags)
+                                                           .FirstOrDefault(p => p.GetCustomAttributes<EntityKeyAttribute>().Any());
+                if (propertyWithEntityKeyAttr != null)
+                    return propertyWithEntityKeyAttr;
+                else
+                    return null;
+            }
+            var propertyWithEntityKeyAttrMeta = ruleMetaMap.Item2
+                                                       .GetProperties(publicPropFlags)
+                                                       .FirstOrDefault(p => p.GetCustomAttributes<EntityKeyAttribute>().Any());
+            if (propertyWithEntityKeyAttrMeta != null)
+            {
+                var matchedProperty = ruleMetaMap.Item1.GetProperties().FirstOrDefault(p => p.Name == propertyWithEntityKeyAttrMeta.Name && p.PropertyType == propertyWithEntityKeyAttrMeta.PropertyType);
+                if (matchedProperty != null)
+                {
+                    return matchedProperty;
+                }
+            }
+            return null;
+        }
+
         public static IHandler FindHandler(this Dictionary<Type, IHandler> attrHandlerMapping, BaseRuleAttribute attribute)
         {
             var handler = attrHandlerMapping.Values.SingleOrDefault(h => h.Handles(attribute));

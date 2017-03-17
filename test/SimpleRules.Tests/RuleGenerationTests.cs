@@ -23,7 +23,7 @@ namespace SimpleRules.Tests
             Assert.IsNotNull(results);
             Assert.AreEqual(1, results.Count());
             var first = results.First();
-            //Assert.AreEqual(1001, first.Key);
+            Assert.AreEqual(1001, first.Key);
             Assert.AreEqual(1, first.Errors.Count);
             Assert.AreEqual("LastLoginDate should be greater than the RegistrationDate", first.Errors[0]);
         }
@@ -51,5 +51,11 @@ namespace SimpleRules.Tests
 
         [GreaterThan("RegistrationDate")]
         public DateTime LastLoginDate { get; set; }
+    }
+
+    public class Course
+    {
+        [EntityKey]
+        public int Id { get; set; }
     }
 }

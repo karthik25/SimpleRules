@@ -126,6 +126,42 @@ namespace SimpleRules.Tests
             var requiredMetadata = dictionary.GetMetadataType(concreteType);
             Assert.IsNull(requiredMetadata);
         }
+
+        [TestMethod]
+        public void CanIdentifyEntityKeyAttributeIfPresent()
+        {
+            var concreteType = typeof (User);
+            var metaType = typeof (UserMetadata);
+            var ruleMetaMap = new Tuple<Type, Type>(concreteType, metaType);
+            var entityProp = ruleMetaMap.FindEntityKeyPropertyInfo();
+            Assert.IsNotNull(entityProp);
+            var expectedProp = concreteType.GetProperty("Id");
+            Assert.AreEqual(expectedProp.Name, entityProp.Name);
+            Assert.AreEqual(expectedProp.PropertyType, entityProp.PropertyType);
+            Assert.AreEqual(expectedProp.DeclaringType, entityProp.DeclaringType);
+        }
+
+        [TestMethod]
+        public void CanIdentifyEntityKeyAttributeIfPresentWithoutMeta()
+        {
+            var concreteType = typeof(Course);
+            var ruleMetaMap = new Tuple<Type, Type>(concreteType, concreteType);
+            var entityProp = ruleMetaMap.FindEntityKeyPropertyInfo();
+            Assert.IsNotNull(entityProp);
+            var expectedProp = concreteType.GetProperty("Id");
+            Assert.AreEqual(expectedProp.Name, entityProp.Name);
+            Assert.AreEqual(expectedProp.PropertyType, entityProp.PropertyType);
+            Assert.AreEqual(expectedProp.DeclaringType, entityProp.DeclaringType);
+        }
+
+        [TestMethod]
+        public void CanIdentifyNullEntityKeyAttribute()
+        {
+            var concreteType = typeof(Employee);
+            var ruleMetaMap = new Tuple<Type, Type>(concreteType, concreteType);
+            var entityProp = ruleMetaMap.FindEntityKeyPropertyInfo();
+            Assert.IsNull(entityProp);
+        }
     }
 
     public class Employee
