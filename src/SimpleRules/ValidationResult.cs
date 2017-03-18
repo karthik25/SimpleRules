@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 namespace SimpleRules
 {
@@ -20,6 +20,14 @@ namespace SimpleRules
             {
                 return Errors.Any();
             }
+        }
+
+        public void Add(string message, RuleType ruleType)
+        {
+            if (ruleType == RuleType.Error)
+                this.Errors.Add(message);
+            else
+                this.Warnings.Add(message);
         }
     }
 }
