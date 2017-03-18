@@ -21,6 +21,27 @@ namespace SimpleRules
                 return Errors.Any();
             }
         }
+        public bool HasWarnings
+        {
+            get
+            {
+                return Warnings.Any();
+            }
+        }
+        public bool HasOnlyWarnings
+        {
+            get
+            {
+                return HasWarnings && !IsError;
+            }
+        }
+        public bool HasOnlyErrors
+        {
+            get
+            {
+                return IsError && !HasWarnings;
+            }
+        }
 
         public void Add(string message, RuleType ruleType)
         {
