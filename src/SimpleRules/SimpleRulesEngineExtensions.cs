@@ -36,17 +36,11 @@ namespace SimpleRules
         }
         
         public static IEnumerable<Tuple<BaseRuleAttribute, PropertyInfo>> GetRules(this Type srcType)
-        {
-            var propList = srcType.GetProperties(publicPropFlags)
-                                  .Where(p => p.GetCustomAttributes<BaseRuleAttribute>().Any());
-            foreach (var prop in propList)
-            {
-                var attrs = prop.GetCustomAttributes<BaseRuleAttribute>();
-                foreach (var attr in attrs)
-                {
-                    yield return new Tuple<BaseRuleAttribute, PropertyInfo>(attr, prop);
-                }
-            }
+        {            
+            var attrList = srcType.GetProperties(publicPropFlags)
+                                  .SelectMany(c => c.GetCustomAttributes<BaseRuleAttribute>(), (prop, attr) => new { prop, attr })
+                                  .Select(p => new Tuple<BaseRuleAttribute, PropertyInfo>(p.attr, p.prop));
+            return attrList;
         }
 
         public static IEnumerable<Tuple<BaseRuleAttribute, PropertyInfo>> GetRules(this Type srcType, Type metadataType)
@@ -55,15 +49,11 @@ namespace SimpleRules
             var metaProperties = metadataType.GetProperties(publicPropFlags);
             var matchedMetaProperties = srcProperties
                                            .Select(p => p.GetMatchingPropertyInfo(metaProperties))
-                                           .Where(r => r != null);
-            foreach (var prop in matchedMetaProperties)
-            {
-                var attrs = prop.GetCustomAttributes<BaseRuleAttribute>();
-                foreach (var attr in attrs)
-                {
-                    yield return new Tuple<BaseRuleAttribute, PropertyInfo>(attr, prop);
-                }
-            }
+                                           .Where(r => r != null);            
+            var attrList = matchedMetaProperties
+                            .SelectMany(c => c.GetCustomAttributes<BaseRuleAttribute>(), (prop, attr) => new { prop, attr })
+                            .Select(p => new Tuple<BaseRuleAttribute, PropertyInfo>(p.attr, p.prop));
+            return attrList;
         }
 
         private static PropertyInfo GetMatchingPropertyInfo(this PropertyInfo srcProperty, IEnumerable<PropertyInfo> metaProperties)
