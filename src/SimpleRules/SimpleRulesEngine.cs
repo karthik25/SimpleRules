@@ -36,7 +36,10 @@ namespace SimpleRules
                     var compiledExpression = GetCompiledRule<TConcrete>(rule.Expression);
                     if (!compiledExpression(item))
                     {
-                        validationResult.Errors.Add(message);
+                        if (rule.RuleType == RuleType.Error)
+                            validationResult.Errors.Add(message);
+                        else
+                            validationResult.Warnings.Add(message);
                     }
                 }
                 yield return validationResult;
