@@ -87,7 +87,7 @@ namespace SimpleRules
             return rulePropertyMap;
         }
 
-        private Func<T, bool> GetCompiledRule<T>(LambdaExpression expression)
+        private static Func<T, bool> GetCompiledRule<T>(LambdaExpression expression)
             where T:class
         {
             return GetFunc<T>(expression.Compile());
