@@ -131,6 +131,17 @@ namespace SimpleRules
             return metaMapping.Item1.GetRules(metaMapping.Item2);
         }
 
+        public static object GetEntityKey<TConcrete>(this Dictionary<Type, PropertyInfo> entityKeyCache, TConcrete item)
+        {
+            if (entityKeyCache.ContainsKey(typeof(TConcrete)))
+            {
+                var propertyInfo = entityKeyCache[typeof(TConcrete)];
+                var keyValue = propertyInfo.GetValue(item);
+                return keyValue;
+            }
+            return null;
+        }
+
         private static BindingFlags publicPropFlags = BindingFlags.Instance | BindingFlags.Public;
     }
 }

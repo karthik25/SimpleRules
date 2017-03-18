@@ -20,7 +20,8 @@ namespace SimpleRules.Handlers
             return new EvaluatedRule
             {
                 MessageFormat = message,
-                Expression = lambdaExpr
+                Expression = lambdaExpr,
+                RuleType = relationalAttr.RuleType
             };
         }
 

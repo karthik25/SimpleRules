@@ -6,5 +6,6 @@ namespace SimpleRules
     {
         public string MessageFormat { get; set; }
         public LambdaExpression Expression { get; set; }
+        public RuleType RuleType { get; set; }
     }
 }

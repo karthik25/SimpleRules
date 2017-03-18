@@ -8,5 +8,6 @@ namespace SimpleRules.Attributes
         public abstract string OtherPropertyName { get; }
         public abstract object ConstantValue { get; }
         public abstract bool CanBeNull { get; }
+        public abstract RuleType RuleType { get; }
     }
 }

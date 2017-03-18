@@ -29,12 +29,7 @@ namespace SimpleRules
             foreach (var item in src)
             {
                 var validationResult = new ValidationResult();
-                if (entityKeyCache.ContainsKey(typeof(TConcrete)))
-                {
-                    var propertyInfo = entityKeyCache[typeof (TConcrete)];
-                    var keyValue = propertyInfo.GetValue(item);
-                    validationResult.Key = keyValue;
-                }
+                validationResult.Key = entityKeyCache.GetEntityKey(item);
                 foreach (var rule in rules)
                 {
                     var message = rule.MessageFormat;

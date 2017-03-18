@@ -1,4 +1,5 @@
-﻿using SimpleRules.Attributes;
+﻿using System;
+using SimpleRules.Attributes;
 
 namespace SimpleRules.Generic
 {
@@ -7,12 +8,14 @@ namespace SimpleRules.Generic
         private readonly string _otherProp;
         private readonly object _constantValue;
         private readonly bool _canBeNull;
+        private readonly RuleType _ruleType;
 
-        public RelationalOperatorAttribute(string otherProp, object constantValue = null, bool canBeNull = false)
+        public RelationalOperatorAttribute(string otherProp, object constantValue = null, bool canBeNull = false, RuleType ruleType = RuleType.Error)
         {
             _otherProp = otherProp;
             _constantValue = constantValue;
             _canBeNull = canBeNull;
+            _ruleType = ruleType;
         }
 
         public override string OtherPropertyName
@@ -35,7 +38,15 @@ namespace SimpleRules.Generic
         {
             get
             {
-                return true;
+                return _canBeNull;
+            }
+        }
+
+        public override RuleType RuleType
+        {
+            get
+            {
+                return _ruleType;
             }
         }
     }
