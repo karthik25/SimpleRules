@@ -52,7 +52,7 @@ namespace SimpleRules.Tests
             var greaterThanAttribute = new GreaterThanAttribute("StartDate");
             var evaluatedRule = handler.GenerateEvaluatedRule<Registration>(greaterThanAttribute, targetProp);
             Assert.IsNotNull(evaluatedRule);
-            Assert.AreEqual("EndDate should be greater than the StartDate", evaluatedRule.MessageFormat);
+            Assert.AreEqual("End Date should be greater than the Start Date", evaluatedRule.MessageFormat);
             Assert.IsNotNull(evaluatedRule.Expression);
         }
     }
