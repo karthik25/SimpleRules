@@ -62,15 +62,16 @@ namespace SimpleRules.Tests
         {
             var activities = new List<Activity>
             {
-                new Activity { Id = 1, StartDate = DateTime.Parse("04/01/2017"), EndDate = DateTime.Parse("04/30/2017"), Capacity = 45, Name = "Cricket" }
+                new Activity { Id = 1, StartDate = DateTime.Parse("04/01/2017"), EndDate = DateTime.Parse("03/30/2017"), Capacity = 45, Name = "Cricket" }
             };
             var validationResults = new SimpleRulesEngine()
                                         .RegisterCustomRule<RangeRuleAttribute, RangeRuleHandler>()
                                         .Validate<Activity>(activities);
             Assert.AreEqual(1, validationResults.Count());
             var validationResult = validationResults.First();
-            Assert.AreEqual(1, validationResult.Errors.Count);
-            Assert.AreEqual("Capacity should be between 10 and 30", validationResult.Errors[0]);
+            Assert.AreEqual(2, validationResult.Errors.Count);
+            Assert.AreEqual("Capacity should be between 10 and 30", validationResult.Errors[1]);
+            Assert.AreEqual("End Date should be Greater Than the Start Date", validationResult.Errors[0]);
         }
     }
 
@@ -85,6 +86,7 @@ namespace SimpleRules.Tests
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
+        [GreaterThan("StartDate")]
         public DateTime EndDate { get; set; }
         [RangeRule(10, 30)]
         public int Capacity { get; set; }
