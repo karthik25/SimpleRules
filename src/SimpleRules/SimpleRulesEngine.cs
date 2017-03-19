@@ -17,14 +17,14 @@ namespace SimpleRules
         private readonly Dictionary<Type, Type> typeMetaCache = new Dictionary<Type, Type>();
         private readonly Dictionary<Type, IHandler> attrHandlerMapping = new Dictionary<Type, IHandler>();
 
-        public SimpleRulesEngine() { }
+        public SimpleRulesEngine()
+        {
+            AddDefaultHandlers();
+        }
         
         public IEnumerable<ValidationResult> Validate<TConcrete>(List<TConcrete> src)
             where TConcrete : class
         {
-            if (!attrHandlerMapping.Any())
-                AddDefaultHandlers();
-
             var rules = GetRules<TConcrete>();
             foreach (var item in src)
             {
