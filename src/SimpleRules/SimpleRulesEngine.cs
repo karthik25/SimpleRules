@@ -60,7 +60,8 @@ namespace SimpleRules
             where RAttr : BaseRuleAttribute
             where Rhandler : IHandler, new()
         {
-            throw new NotImplementedException();
+            attrHandlerMapping.Add(typeof(RAttr), new Rhandler());
+            return this;
         }
 
         private EvaluatedRule[] GetRules<TConcrete>()
