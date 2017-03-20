@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{919A4707-C898-4C5D-BEE3-464F6E593FF6}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleRules", "src\SimpleRules\SimpleRules.xproj", "{9EEE92D4-2051-4CF5-986F-95B76278F6F9}"
