@@ -28,7 +28,7 @@ namespace SimpleRules.Handlers
                 {
                     throw new NotNullablePropertyException(targetProp.Name);
                 }
-            }            
+            }
             if (relationalAttr.ConstantValue != null)
             {
                 var constantValue = Expression.Constant(relationalAttr.ConstantValue);
@@ -41,7 +41,6 @@ namespace SimpleRules.Handlers
                 var propExpr = leftExpr.CreateBinaryExpression(rightExpr, relationalAttr.SupportedType, targetProp);
                 expressions.Add(propExpr);
             }
-
             var orExpr = expressions.CreateBinaryExpressionFromList();
             var lambdaExpr = Expression.Lambda(orExpr, input);
             var message = string.Format("{0} should be {1} the {2}", targetProp.Name.AddSpaces(), relationalAttr.SupportedType.ToString().AddSpaces(), relationalAttr.OtherPropertyName.AddSpaces());
