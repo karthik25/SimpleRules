@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleRules.Attributes;
+using SimpleRules.Exceptions;
 using SimpleRules.Generic;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,45 @@ namespace SimpleRules.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(NotNullablePropertyException))]
+        public void CanIdentifyNotNullablePropWithCanBeNullSetWithConstant()
+        {
+            var jobs = new List<JobWithoutNull>
+           { 
+                new JobWithoutNull { Capacity = 10 }
+            };
+            var validationResultsEnumerator = new SimpleRulesEngine()
+                                            .Validate<JobWithoutNull>(jobs);
+            var validationResults = validationResultsEnumerator.ToList();
+
+        }
+
+        [TestMethod]
+        public void CanIdentifyNullablePropWithCanBeBullSetWithConstant()
+        {
+            var jobs = new List<JobWithNull>
+            {
+                new JobWithNull { Capacity = null }
+            };
+            var validationResults = new SimpleRulesEngine()
+                                            .Validate<JobWithNull>(jobs);
+            Assert.AreEqual(1, validationResults.Count());
+            Assert.AreEqual(0, validationResults.First().Errors.Count());
+            jobs = new List<JobWithNull>
+            {
+                new JobWithNull { Capacity = 25, MaxCapacity = 15 }
+            };
+            Assert.AreEqual(1, validationResults.Count());
+            Assert.AreEqual(0, validationResults.First().Errors.Count());
+            jobs = new List<JobWithNull>
+            {
+                new JobWithNull { Capacity = 40, MaxCapacity = 45 }
+            };
+            Assert.AreEqual(1, validationResults.Count());
+            Assert.AreEqual(0, validationResults.First().Errors.Count());
+        }
+
+        [TestMethod]
         public void CanGenerateRegexRules()
         {
 
@@ -86,5 +126,19 @@ namespace SimpleRules.Tests
     {
         [EntityKey]
         public int Id { get; set; }
+    }
+
+    public class JobWithNull
+    {
+        [LessThan("MaxCapacity", canBeNull: true, constantValue: 30)]
+        public int? Capacity { get; set; }
+        public int MaxCapacity { get; set; }
+    }
+
+    public class JobWithoutNull
+    {
+        [LessThan("MaxCapacity", canBeNull: true, constantValue: 30)]
+        public int Capacity { get; set; }
+        public int MaxCapacity { get; set; }
     }
 }
