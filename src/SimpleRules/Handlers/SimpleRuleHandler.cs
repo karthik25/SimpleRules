@@ -63,24 +63,7 @@ namespace SimpleRules.Handlers
             if (!string.IsNullOrEmpty(relationalAttr.OtherPropertyName))
             {
                 var rightExpr = Expression.PropertyOrField(input, relationalAttr.OtherPropertyName);
-
-                BinaryExpression propExpr = null;
-                if (!isNullable)
-                {
-                    propExpr = Expression.MakeBinary(
-                                    relationalAttr.SupportedType,
-                                    leftExpr,
-                                    rightExpr
-                               );
-                }
-                else
-                {
-                    propExpr = Expression.MakeBinary(
-                                  relationalAttr.SupportedType,
-                                  nullableLeftExpr,
-                                  Expression.Convert(rightExpr, targetProp.PropertyType)
-                               );
-                }
+                BinaryExpression propExpr = leftExpr.CreateBinaryExpression(rightExpr, relationalAttr.SupportedType, targetProp);
                 expressions.Add(propExpr);
             }
 

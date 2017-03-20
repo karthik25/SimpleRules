@@ -26,6 +26,30 @@ namespace SimpleRules
             return (BinaryExpression) aggregatedExpr;
         }
 
+        public static BinaryExpression CreateBinaryExpression(this MemberExpression leftExpr, 
+                                                                   MemberExpression rightExpr, 
+                                                                   ExpressionType exprType, 
+                                                                   PropertyInfo propertyInfo)
+        {
+            var isNullable = propertyInfo.IsNullable();
+            var propType = propertyInfo.PropertyType;
+            if (isNullable)
+            {
+                return Expression.MakeBinary(
+                            exprType, 
+                            Expression.Convert(leftExpr, propType), 
+                            Expression.Convert(rightExpr, propType));
+            }
+            else
+            {
+                return Expression.MakeBinary(
+                                exprType,
+                                leftExpr,
+                                rightExpr
+                            );
+            }
+        }
+
         public static bool IsNullable(this PropertyInfo propertyInfo)
         {
             return propertyInfo.PropertyType.IsGenericType && 
