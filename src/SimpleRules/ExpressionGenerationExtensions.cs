@@ -26,28 +26,27 @@ namespace SimpleRules
             return (BinaryExpression) aggregatedExpr;
         }
 
-        public static BinaryExpression CreateBinaryExpression(this MemberExpression leftExpr, 
-                                                                   MemberExpression rightExpr, 
+        public static BinaryExpression CreateBinaryExpression(this Expression expr, PropertyInfo propertyInfo)
+        {
+            var nullableExpr = Expression.Convert(expr, propertyInfo.PropertyType);
+            var nullConst = Expression.Constant(null);
+            return Expression.MakeBinary(ExpressionType.Equal, nullableExpr, nullConst);
+        }
+
+        public static BinaryExpression CreateBinaryExpression(this Expression leftExpr, 
+                                                                   Expression rightExpr, 
                                                                    ExpressionType exprType, 
                                                                    PropertyInfo propertyInfo)
         {
             var isNullable = propertyInfo.IsNullable();
             var propType = propertyInfo.PropertyType;
-            if (isNullable)
-            {
-                return Expression.MakeBinary(
-                            exprType, 
-                            Expression.Convert(leftExpr, propType), 
-                            Expression.Convert(rightExpr, propType));
-            }
-            else
-            {
-                return Expression.MakeBinary(
-                                exprType,
-                                leftExpr,
-                                rightExpr
-                            );
-            }
+            var leftExprFinal = isNullable ? Expression.Convert(leftExpr, propertyInfo.PropertyType) : leftExpr;
+            var rightExprFinal = isNullable ? Expression.Convert(rightExpr, propertyInfo.PropertyType) : rightExpr;
+            return Expression.MakeBinary(
+                        exprType,
+                        leftExprFinal,
+                        rightExprFinal
+                   );
         }
 
         public static bool IsNullable(this PropertyInfo propertyInfo)

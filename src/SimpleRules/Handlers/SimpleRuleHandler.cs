@@ -36,34 +36,17 @@ namespace SimpleRules.Handlers
                 {
                     throw new NotNullablePropertyException(targetProp.Name);
                 }
-            }
+            }            
             if (relationalAttr.ConstantValue != null)
             {
                 var constantValue = Expression.Constant(relationalAttr.ConstantValue);
-                BinaryExpression finalExpr = null;
-                if (!isNullable)
-                {
-                    finalExpr = Expression.MakeBinary(
-                                        relationalAttr.SupportedType,
-                                        leftExpr,
-                                        constantValue
-                                      );
-                }
-                else
-                {
-                    finalExpr = Expression.MakeBinary(
-                                        relationalAttr.SupportedType,
-                                        nullableLeftExpr,
-                                        Expression.Convert(constantValue, targetProp.PropertyType)
-                                      );
-                }
+                BinaryExpression finalExpr = leftExpr.CreateBinaryExpression(constantValue, relationalAttr.SupportedType, targetProp);                
                 expressions.Add(finalExpr);
             }
-
             if (!string.IsNullOrEmpty(relationalAttr.OtherPropertyName))
             {
                 var rightExpr = Expression.PropertyOrField(input, relationalAttr.OtherPropertyName);
-                BinaryExpression propExpr = leftExpr.CreateBinaryExpression(rightExpr, relationalAttr.SupportedType, targetProp);
+                var propExpr = leftExpr.CreateBinaryExpression(rightExpr, relationalAttr.SupportedType, targetProp);
                 expressions.Add(propExpr);
             }
 
