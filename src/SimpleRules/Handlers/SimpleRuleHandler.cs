@@ -17,19 +17,11 @@ namespace SimpleRules.Handlers
             var input = Expression.Parameter(typeof(TConcrete), "i");
             var leftExpr = Expression.PropertyOrField(input, targetProp.Name);
             var isNullable = targetProp.IsNullable();
-            UnaryExpression nullableLeftExpr = null;
-            if (isNullable)
-            {
-                nullableLeftExpr = Expression.Convert(leftExpr, targetProp.PropertyType);
-            }
             if (relationalAttr.CanBeNull)
             {
                 if (isNullable)
                 {
-                    var nullConstant = Expression.Equal(
-                            nullableLeftExpr,
-                            Expression.Constant(null)
-                        );
+                    var nullConstant = leftExpr.CreateBinaryExpression(targetProp);
                     expressions.Add(nullConstant);
                 }
                 else
