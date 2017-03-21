@@ -1,10 +1,8 @@
 ﻿using System;
 using SimpleRules.Contracts;
-using SimpleRules.Attributes;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Linq;
-using SimpleRules.Generic;
 using SimpleRules.Handlers;
 using System.Reflection;
 
@@ -15,7 +13,7 @@ namespace SimpleRules
         private readonly Dictionary<Type, EvaluatedRule[]> typeRulesCache = new Dictionary<Type, EvaluatedRule[]>();
         private readonly Dictionary<Type, PropertyInfo> entityKeyCache = new Dictionary<Type, PropertyInfo>();
         private readonly Dictionary<Type, Type> typeMetaCache = new Dictionary<Type, Type>();
-        private readonly Dictionary<Type, IHandler> attrHandlerMapping = new Dictionary<Type, IHandler>();
+        private readonly List<IHandler> handlerList = new List<IHandler>();
 
         public SimpleRulesEngine()
         {
@@ -45,7 +43,7 @@ namespace SimpleRules
 
         private void AddDefaultHandlers()
         {
-            attrHandlerMapping.Add(typeof(RelationalOperatorAttribute), new SimpleRuleHandler());
+            handlerList.Add(new SimpleRuleHandler());
         }
 
         public SimpleRulesEngine RegisterMetadata<TConcrete, TMeta>()
@@ -56,11 +54,10 @@ namespace SimpleRules
             return this;
         }
 
-        public SimpleRulesEngine RegisterCustomRule<RAttr, Rhandler>()
-            where RAttr : BaseRuleAttribute
+        public SimpleRulesEngine RegisterCustomRule<Rhandler>()
             where Rhandler : IHandler, new()
         {
-            attrHandlerMapping.Add(typeof(RAttr), new Rhandler());
+            handlerList.Add(new Rhandler());
             return this;
         }
 
@@ -82,7 +79,7 @@ namespace SimpleRules
             }
 
             var rulePropertyMap = metaDataType.GetRules()
-                                              .Select(m => attrHandlerMapping.ProcessRule<TConcrete>(m.Item1, m.Item2))
+                                              .Select(m => handlerList.ProcessRule<TConcrete>(m.Item1, m.Item2))
                                               .ToArray();
             typeRulesCache[type] = rulePropertyMap;
             return rulePropertyMap;

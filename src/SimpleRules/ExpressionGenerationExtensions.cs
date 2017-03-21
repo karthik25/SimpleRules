@@ -10,7 +10,7 @@ namespace SimpleRules
 {
     public static class ExpressionGenerationExtensions
     {
-        public static EvaluatedRule ProcessRule<TConcrete>(this Dictionary<Type, IHandler> handlerDictionary, 
+        public static EvaluatedRule ProcessRule<TConcrete>(this List<IHandler> handlerDictionary, 
                                                         BaseRuleAttribute attribute, PropertyInfo targetProp)
         {
             var handler = handlerDictionary.FindHandler(attribute);

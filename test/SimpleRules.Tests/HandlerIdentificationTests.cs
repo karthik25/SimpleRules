@@ -18,8 +18,8 @@ namespace SimpleRules.Tests
         [TestMethod]
         public void CanIdentifyAppropriateHandler()
         {
-            var dictionary = new Dictionary<Type, IHandler>();
-            dictionary.Add(typeof(RelationalOperatorAttribute), new SimpleRuleHandler());
+            var handlerList = new List<IHandler>();
+            handlerList.Add(new SimpleRuleHandler());
 
             var type = typeof(Employee);
             var ruleAttributes = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -27,7 +27,7 @@ namespace SimpleRules.Tests
                                      .ToList();
             ruleAttributes.ForEach(attr =>
             {
-                var handler = dictionary.FindHandler(attr);
+                var handler = handlerList.FindHandler(attr);
                 Assert.IsNotNull(handler);
                 Assert.AreEqual(typeof(SimpleRuleHandler), handler.GetType());
             });
@@ -37,12 +37,12 @@ namespace SimpleRules.Tests
         [ExpectedException(typeof(HandlerNotFoundException))]
         public void CanThrowExceptionsForUnkownAttributes()
         {
-            var dictionary = new Dictionary<Type, IHandler>();
+            var handlerList = new List<IHandler>();
             var type = typeof (Employee);
             var ruleAttributes = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                      .SelectMany(p => p.GetCustomAttributes<BaseRuleAttribute>())
                                      .ToList();
-            var handler = dictionary.FindHandler(ruleAttributes.First());
+            var handler = handlerList.FindHandler(ruleAttributes.First());
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace SimpleRules.Tests
                 new Activity { Id = 1, StartDate = DateTime.Parse("04/01/2017"), EndDate = DateTime.Parse("03/30/2017"), Capacity = 45, Name = "Cricket" }
             };
             var validationResults = new SimpleRulesEngine()
-                                        .RegisterCustomRule<RangeRuleAttribute, RangeRuleHandler>()
+                                        .RegisterCustomRule<RangeRuleHandler>()
                                         .Validate<Activity>(activities);
             Assert.AreEqual(1, validationResults.Count());
             var validationResult = validationResults.First();
