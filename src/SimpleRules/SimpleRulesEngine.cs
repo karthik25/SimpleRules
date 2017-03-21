@@ -61,6 +61,13 @@ namespace SimpleRules
             return this;
         }
 
+        public SimpleRulesEngine DiscoverHandlers(params Type[] assemblyMarkers)
+        {
+            var discoveredHandlers = assemblyMarkers.FindHandlersInAssemblies();
+            handlerList.AddRange(discoveredHandlers);
+            return this;
+        }
+
         private EvaluatedRule[] GetRules<TConcrete>()
         {
             var type = typeof (TConcrete);
