@@ -4,6 +4,6 @@ namespace SimpleRules.Attributes
 {
     public abstract class RegexRuleAttribute : BaseRuleAttribute
     {
-        public abstract Regex RegularExpression { get; }
+        public abstract string RegularExpression { get; }
     }
 }

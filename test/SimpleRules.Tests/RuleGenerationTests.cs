@@ -89,7 +89,23 @@ namespace SimpleRules.Tests
         [TestMethod]
         public void CanGenerateRegexRules()
         {
-
+            var codes = new List<Code>
+            {
+                new Code { Value = "abc" }
+            };
+            var validationResults = new SimpleRulesEngine()
+                                        .Validate<Code>(codes);
+            Assert.AreEqual(1, validationResults.Count());
+            Assert.AreEqual(1, validationResults.First().Errors.Count());
+            Assert.AreEqual("Value does not match the expected format (\\d+)", validationResults.First().Errors[0]);
+            codes = new List<Code>
+            {
+                new Code { Value = "123" }
+            };
+            validationResults = new SimpleRulesEngine()
+                                        .Validate<Code>(codes);
+            Assert.AreEqual(1, validationResults.Count());
+            Assert.AreEqual(0, validationResults.First().Errors.Count());
         }
     }
 
@@ -140,5 +156,11 @@ namespace SimpleRules.Tests
         [LessThan("MaxCapacity", canBeNull: true, constantValue: 30)]
         public int Capacity { get; set; }
         public int MaxCapacity { get; set; }
+    }
+
+    public class Code
+    {
+        [MatchRegex(@"\d+")]
+        public string Value { get; set; }
     }
 }

@@ -44,6 +44,7 @@ namespace SimpleRules
         private void AddDefaultHandlers()
         {
             handlerList.Add(new SimpleRuleHandler());
+            handlerList.Add(new RegexRuleHandler());
         }
 
         public SimpleRulesEngine RegisterMetadata<TConcrete, TMeta>()
