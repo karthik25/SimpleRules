@@ -93,15 +93,15 @@ namespace SimpleRules
             return rulePropertyMap;
         }
 
-        private static Func<T, bool> GetCompiledRule<T>(LambdaExpression expression)
-            where T:class
+        private static Func<TConcrete, bool> GetCompiledRule<TConcrete>(LambdaExpression expression)
+            where TConcrete : class
         {
-            return GetFunc<T>(expression.Compile());
+            return GetFunc<TConcrete>(expression.Compile());
         }
 
-        private static Func<T, bool> GetFunc<T>(Delegate funcDelegate)
+        private static Func<TConcrete, bool> GetFunc<TConcrete>(Delegate funcDelegate)
         {
-            return (Func<T, bool>)funcDelegate;
+            return (Func<TConcrete, bool>)funcDelegate;
         }
     }
 }
