@@ -17,7 +17,7 @@ namespace SimpleRules
             return handler.GenerateEvaluatedRule<TConcrete>(attribute, targetProp);
         }
 
-        public static BinaryExpression CreateBinaryExpressionFromList(this List<Expression> expressions)
+        public static BinaryExpression CreateBinaryExpression(this List<Expression> expressions)
         {
             var aggregatedExpr = expressions.Aggregate((e1, e2) =>
             {

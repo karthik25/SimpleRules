@@ -1,5 +1,4 @@
-﻿using System;
-using SimpleRules.Attributes;
+﻿using SimpleRules.Attributes;
 using SimpleRules.Contracts;
 using System.Reflection;
 using System.Linq.Expressions;
