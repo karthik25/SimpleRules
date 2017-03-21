@@ -19,3 +19,7 @@ ToDo
 ### Discover Handlers Dynamically Using Assembly Markers
 
 ToDo
+
+### Usage in a .Net Core MVC Project
+
+ToDo
