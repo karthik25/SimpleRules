@@ -15,3 +15,7 @@ ToDo
 ### Creating Custom Rules
 
 ToDo
+
+### Discover Handlers Dynamically Using Assembly Markers
+
+ToDo
