@@ -23,22 +23,19 @@ namespace SimpleRules
         public IEnumerable<ValidationResult> Validate<TConcrete>(List<TConcrete> src)
             where TConcrete : class
         {
-            var rules = GetRules<TConcrete>();
-            foreach (var item in src)
+            var rules = GetRules<TConcrete>();            
+            return src.Select(s =>
             {
-                var validationResult = new ValidationResult();
-                validationResult.Key = entityKeyCache.GetEntityKey(item);
+                var validationResult = new ValidationResult { Key = entityKeyCache.GetEntityKey(s) };
                 foreach (var rule in rules)
                 {
-                    var message = rule.MessageFormat;
                     var compiledExpression = GetCompiledRule<TConcrete>(rule.Expression);
-                    if (!compiledExpression(item))
-                    {
-                        validationResult.Add(message, rule.RuleType);
-                    }
+                    if (!compiledExpression(s))
+                        validationResult.Add(rule.MessageFormat, rule.RuleType);
                 }
-                yield return validationResult;
-            }
+                return validationResult;
+            });
+
         }
 
         public SimpleRulesEngine RegisterMetadata<TConcrete, TMeta>()
