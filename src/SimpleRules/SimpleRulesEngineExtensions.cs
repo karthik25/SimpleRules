@@ -1,10 +1,8 @@
 ﻿using System;
-using SimpleRules.Attributes;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using SimpleRules.Contracts;
-using SimpleRules.Exceptions;
+using SimpleRules.Attributes;
+using System.Collections.Generic;
 
 namespace SimpleRules
 {
@@ -112,16 +110,6 @@ namespace SimpleRules
                 }
             }
             return null;
-        }
-
-        public static IHandler FindHandler(this Dictionary<Type, IHandler> handlerMapping, BaseRuleAttribute attribute)
-        {
-            var handler = handlerMapping.Values.SingleOrDefault(h => h.Handles(attribute));
-            if (handler == null)
-            {
-                throw new HandlerNotFoundException(attribute.GetType().Name, attribute.GetType().FullName);
-            }
-            return handler;
         }
 
         public static IEnumerable<Tuple<BaseRuleAttribute, PropertyInfo>> GetRules(this Tuple<Type, Type> metaMapping)

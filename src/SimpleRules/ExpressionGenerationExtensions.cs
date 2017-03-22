@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq.Expressions;
 using System.Linq;
+using SimpleRules.Exceptions;
 
 namespace SimpleRules
 {
@@ -15,6 +16,17 @@ namespace SimpleRules
         {
             var handler = handlerMapping.FindHandler(attribute);
             return handler.GenerateEvaluatedRule<TConcrete>(attribute, targetProp);
+        }
+
+        public static IHandler FindHandler(this Dictionary<Type, IHandler> handlerMapping, BaseRuleAttribute attribute)
+        {
+            var handler = handlerMapping.Values.SingleOrDefault(h => h.Handles(attribute));
+            if (handler == null)
+            {
+                var attrType = attribute.GetType();
+                throw new HandlerNotFoundException(attrType.Name, attrType.FullName);
+            }
+            return handler;
         }
 
         public static BinaryExpression CreateBinaryExpression(this List<Expression> expressions)

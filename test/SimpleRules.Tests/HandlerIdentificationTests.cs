@@ -146,10 +146,10 @@ namespace SimpleRules.Tests
 
     public class RangeRuleHandler : IHandler
     {
-        public EvaluatedRule GenerateEvaluatedRule<T>(BaseRuleAttribute attribute, PropertyInfo targetProp)
+        public EvaluatedRule GenerateEvaluatedRule<TConcrete>(BaseRuleAttribute attribute, PropertyInfo targetProp)
         {
             var rangeAttr = attribute as RangeRuleAttribute;
-            var input = Expression.Parameter(typeof(T), "a");
+            var input = Expression.Parameter(typeof(TConcrete), "a");
             var propName = targetProp.Name;
             var comparison = Expression.And(
                     Expression.GreaterThan(Expression.PropertyOrField(input, propName), Expression.Constant(rangeAttr.MinValue)),
