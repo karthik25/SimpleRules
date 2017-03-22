@@ -114,9 +114,9 @@ namespace SimpleRules
             return null;
         }
 
-        public static IHandler FindHandler(this List<IHandler> handlerList, BaseRuleAttribute attribute)
+        public static IHandler FindHandler(this Dictionary<Type, IHandler> handlerMapping, BaseRuleAttribute attribute)
         {
-            var handler = handlerList.SingleOrDefault(h => h.Handles(attribute));
+            var handler = handlerMapping.Values.SingleOrDefault(h => h.Handles(attribute));
             if (handler == null)
             {
                 throw new HandlerNotFoundException(attribute.GetType().Name, attribute.GetType().FullName);

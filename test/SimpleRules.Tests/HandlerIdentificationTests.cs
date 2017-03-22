@@ -18,8 +18,8 @@ namespace SimpleRules.Tests
         [TestMethod]
         public void CanIdentifyAppropriateHandler()
         {
-            var handlerList = new List<IHandler>();
-            handlerList.Add(new SimpleRuleHandler());
+            var handlerMapping = new Dictionary<Type, IHandler>();
+            handlerMapping.Add(typeof(SimpleRuleHandler), new SimpleRuleHandler());
 
             var type = typeof(Employee);
             var ruleAttributes = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -27,7 +27,7 @@ namespace SimpleRules.Tests
                                      .ToList();
             ruleAttributes.ForEach(attr =>
             {
-                var handler = handlerList.FindHandler(attr);
+                var handler = handlerMapping.FindHandler(attr);
                 Assert.IsNotNull(handler);
                 Assert.AreEqual(typeof(SimpleRuleHandler), handler.GetType());
             });
@@ -37,12 +37,12 @@ namespace SimpleRules.Tests
         [ExpectedException(typeof(HandlerNotFoundException))]
         public void CanThrowExceptionsForUnkownAttributes()
         {
-            var handlerList = new List<IHandler>();
+            var handlerMapping = new Dictionary<Type, IHandler>();
             var type = typeof (Employee);
             var ruleAttributes = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                      .SelectMany(p => p.GetCustomAttributes<BaseRuleAttribute>())
                                      .ToList();
-            var handler = handlerList.FindHandler(ruleAttributes.First());
+            var handler = handlerMapping.FindHandler(ruleAttributes.First());
         }
 
         [TestMethod]

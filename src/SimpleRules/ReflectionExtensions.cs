@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Linq;
 using SimpleRules.Contracts;
+using System.Collections.Generic;
 
 namespace SimpleRules
 {
     public static class ReflectionExtensions
     {
-        public static IHandler[] FindHandlersInAssemblies(this Type[] assemblyMarkerTypes)
+        public static IEnumerable<Type> FindHandlerTypesInAssemblies(this Type[] assemblyMarkerTypes)
         {
             var assemblies = assemblyMarkerTypes.Select(a => a.Assembly);
             var handlerTypes = assemblies.SelectMany(a => a.GetTypes()).Where(a => typeof(IHandler).IsAssignableFrom(a));
-            var instances = handlerTypes.Select(h => Activator.CreateInstance(h)).Cast<IHandler>().ToArray();
-            return instances;
+            return handlerTypes;
+        }
+
+        public static IHandler CreateInstance(this Type type)
+        {
+            var instance = Activator.CreateInstance(type);
+            return instance as IHandler;
         }
     }
 }

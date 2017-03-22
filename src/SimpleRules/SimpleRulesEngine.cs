@@ -13,7 +13,7 @@ namespace SimpleRules
         private readonly Dictionary<Type, EvaluatedRule[]> typeRulesCache = new Dictionary<Type, EvaluatedRule[]>();
         private readonly Dictionary<Type, PropertyInfo> entityKeyCache = new Dictionary<Type, PropertyInfo>();
         private readonly Dictionary<Type, Type> typeMetaCache = new Dictionary<Type, Type>();
-        private readonly List<IHandler> handlerList = new List<IHandler>();
+        private readonly Dictionary<Type, IHandler> handlerMapping = new Dictionary<Type, IHandler>();
 
         public SimpleRulesEngine()
         {
@@ -43,8 +43,8 @@ namespace SimpleRules
 
         private void AddDefaultHandlers()
         {
-            handlerList.Add(new SimpleRuleHandler());
-            handlerList.Add(new RegexRuleHandler());
+            handlerMapping.Add(typeof(SimpleRuleHandler), new SimpleRuleHandler());
+            handlerMapping.Add(typeof(RegexRuleHandler), new RegexRuleHandler());
         }
 
         public SimpleRulesEngine RegisterMetadata<TConcrete, TMeta>()
@@ -58,14 +58,17 @@ namespace SimpleRules
         public SimpleRulesEngine RegisterCustomRule<Rhandler>()
             where Rhandler : IHandler, new()
         {
-            handlerList.Add(new Rhandler());
+            handlerMapping.Add(typeof(Rhandler), new Rhandler());
             return this;
         }
 
         public SimpleRulesEngine DiscoverHandlers(params Type[] assemblyMarkers)
         {
-            var discoveredHandlers = assemblyMarkers.FindHandlersInAssemblies();
-            handlerList.AddRange(discoveredHandlers);
+            var discoveredHandlerTypes = assemblyMarkers.FindHandlerTypesInAssemblies();
+            foreach (var handler in discoveredHandlerTypes)
+            {
+                handlerMapping.Add(handler, handler.CreateInstance());
+            }
             return this;
         }
 
@@ -87,7 +90,7 @@ namespace SimpleRules
             }
 
             var rulePropertyMap = metaDataType.GetRules()
-                                              .Select(m => handlerList.ProcessRule<TConcrete>(m.Item1, m.Item2))
+                                              .Select(m => handlerMapping.ProcessRule<TConcrete>(m.Item1, m.Item2))
                                               .ToArray();
             typeRulesCache[type] = rulePropertyMap;
             return rulePropertyMap;
