@@ -1,10 +1,10 @@
 ﻿using System;
-using SimpleRules.Contracts;
-using System.Linq.Expressions;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SimpleRules.Contracts;
 using SimpleRules.Exceptions;
+using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace SimpleRules
 {
@@ -35,7 +35,6 @@ namespace SimpleRules
                 }
                 return validationResult;
             });
-
         }
 
         public SimpleRulesEngine RegisterMetadata<TConcrete, TMeta>()
@@ -95,7 +94,7 @@ namespace SimpleRules
 
         private void AddDefaultHandlers()
         {
-            this.DiscoverHandlers(typeof(SimpleRulesEngine));
+            this.DiscoverHandlers(typeof (SimpleRulesEngine));
         }
 
         private static Func<TConcrete, bool> GetCompiledRule<TConcrete>(LambdaExpression expression)
