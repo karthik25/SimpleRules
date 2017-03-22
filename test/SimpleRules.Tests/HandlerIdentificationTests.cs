@@ -90,6 +90,24 @@ namespace SimpleRules.Tests
             Assert.AreEqual("Capacity should be between 10 and 30", validationResult.Errors[1]);
             Assert.AreEqual("End Date should be Greater Than the Start Date", validationResult.Errors[0]);
         }
+
+        [TestMethod]
+        public void CanDealWithMultipleCallsToDiscoverHandlers()
+        {
+            var activities = new List<Activity>
+            {
+                new Activity { Id = 1, StartDate = DateTime.Parse("04/01/2017"), EndDate = DateTime.Parse("03/30/2017"), Capacity = 45, Name = "Cricket" }
+            };
+            var validationResults = new SimpleRulesEngine()
+                                            .DiscoverHandlers(new[] { typeof(Marker) })
+                                            .DiscoverHandlers(new[] { typeof(Marker) })
+                                            .Validate<Activity>(activities);
+            Assert.AreEqual(1, validationResults.Count());
+            var validationResult = validationResults.First();
+            Assert.AreEqual(2, validationResult.Errors.Count);
+            Assert.AreEqual("Capacity should be between 10 and 30", validationResult.Errors[1]);
+            Assert.AreEqual("End Date should be Greater Than the Start Date", validationResult.Errors[0]);
+        }
     }
 
     public class Marker

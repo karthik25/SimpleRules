@@ -43,8 +43,7 @@ namespace SimpleRules
 
         private void AddDefaultHandlers()
         {
-            handlerMapping.Add(typeof(SimpleRuleHandler), new SimpleRuleHandler());
-            handlerMapping.Add(typeof(RegexRuleHandler), new RegexRuleHandler());
+            this.DiscoverHandlers(typeof (SimpleRulesEngine));
         }
 
         public SimpleRulesEngine RegisterMetadata<TConcrete, TMeta>()
@@ -58,7 +57,8 @@ namespace SimpleRules
         public SimpleRulesEngine RegisterCustomRule<Rhandler>()
             where Rhandler : IHandler, new()
         {
-            handlerMapping.Add(typeof(Rhandler), new Rhandler());
+            if (!handlerMapping.ContainsKey(typeof (Rhandler)))
+                handlerMapping.Add(typeof(Rhandler), new Rhandler());
             return this;
         }
 
@@ -67,7 +67,8 @@ namespace SimpleRules
             var discoveredHandlerTypes = assemblyMarkers.FindHandlerTypesInAssemblies();
             foreach (var handler in discoveredHandlerTypes)
             {
-                handlerMapping.Add(handler, handler.CreateInstance());
+                if (!handlerMapping.ContainsKey(handler))
+                    handlerMapping.Add(handler, handler.CreateInstance());
             }
             return this;
         }
