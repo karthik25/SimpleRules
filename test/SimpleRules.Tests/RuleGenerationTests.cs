@@ -30,6 +30,22 @@ namespace SimpleRules.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(DuplicateMetadataRegistrationException))]
+        public void CanThrowExceptionForDuplicateMetdataRegistration()
+        {
+            var users = new List<User>
+            {
+                new User { Id = 1001, RegistrationDate = DateTime.Now, LastLoginDate = DateTime.Now.AddDays(-1) }
+            };
+            var results = new SimpleRulesEngine()
+                                .RegisterMetadata<User, UserMetadata>()
+                                .RegisterMetadata<User, UserMetadata>()
+                                .Validate<User>(users);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(1, results.Count());
+        }
+
+        [TestMethod]
         public void CanGenerateSimpleRuleWithWarnings()
         {
             var users = new List<User>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SimpleRules.Handlers;
 using System.Reflection;
+using SimpleRules.Exceptions;
 
 namespace SimpleRules
 {
@@ -50,7 +51,11 @@ namespace SimpleRules
             where TConcrete : class
             where TMeta : class
         {
-            typeMetaCache.Add(typeof(TConcrete), typeof(TMeta));
+            var concreteType = typeof (TConcrete);
+            var metaType = typeof (TMeta);
+            if (typeMetaCache.ContainsKey(concreteType))
+                throw new DuplicateMetadataRegistrationException(concreteType.Name, metaType.Name);
+            typeMetaCache.Add(concreteType, metaType);
             return this;
         }
 
