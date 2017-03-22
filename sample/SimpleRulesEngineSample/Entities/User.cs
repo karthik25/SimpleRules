@@ -1,17 +1,7 @@
-﻿@model List<string>
+﻿using SimpleRules.Generic;
 
-@{
-    ViewData["Title"] = "Home Page";
-}
-
-<br />
-
-<div>
-    Given the following class with a validation rule set,
-</div>
-<br />
-
-<pre>
+namespace SimpleRulesEngineSample.Entities
+{
     public class User
     {
         public string Username { get; set; }
@@ -23,19 +13,4 @@
         [UsPhoneNumberRegex]
         public string PhoneNumber { get; set; }
     }
-</pre>
-
-<div>
-    The validation results are:
-</div>
-
-<br />
-
-<div class="well">
-    <ul>
-        @foreach (var item in Model)
-        {
-            <li>@item</li>
-        }
-    </ul>
-</div>
+}
