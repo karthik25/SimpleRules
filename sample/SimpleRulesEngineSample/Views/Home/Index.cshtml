@@ -4,6 +4,14 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style type="text/css">
+    pre, code {
+        background: #272822;
+        font-family: monospace;
+        border: 0px
+    }
+</style>
+
 <br />
 
 <div>
@@ -12,6 +20,7 @@
 <br />
 
 <pre>
+    <code class="csharp">
     public class User
     {
         public string Username { get; set; }
@@ -23,6 +32,7 @@
         [UsPhoneNumberRegex]
         public string PhoneNumber { get; set; }
     }
+    </code>
 </pre>
 
 <div>
@@ -48,6 +58,7 @@
 <br />
 
 <pre>
+    <code class="csharp">
     public class Registration
     {
         public DateTime StartDate { get; set; }
@@ -60,7 +71,7 @@
         [GreaterThan("StartDate", canBeNull: true)]
         public DateTime? EndDate { get; set; }
     }
-
+    </code>
 </pre>
 
 <div>
@@ -85,6 +96,7 @@
 <br />
 
 <pre>
+    <code class="csharp">
     public void ConfigureServices(IServiceCollection services)
     {
         // ...
@@ -93,6 +105,7 @@
         services.AddSingleton(typeof (SimpleRulesEngine), simpleRulesEngine);
         // ...
     }
+    </code>
 </pre>
 
 <hr />
@@ -103,13 +116,13 @@
 <br />
 
 <pre>
+    <code class="csharp">
     public class Activity
     {
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int Capacity { get; set; }
     }
-
     public class ActivityMetadata
     {
         public DateTime StartDate { get; set; }
@@ -118,6 +131,7 @@
         [RangeRule(10, 20)]
         public int Capacity { get; set; }
     }
+    </code>
 </pre>
 
 <div>
@@ -143,6 +157,7 @@
 <br />
 
 <pre>
+    <code class="csharp">
     public void ConfigureServices(IServiceCollection services)
     {
         // ...
@@ -153,6 +168,7 @@
         services.AddSingleton(typeof (SimpleRulesEngine), simpleRulesEngine);
         // ...
     }
+    </code>
 </pre>
 
 <br />
@@ -164,6 +180,7 @@
 <br />
 
 <pre>
+    <code class="csharp">
     public class RangeRuleAttribute : BaseRuleAttribute
     {
         public RangeRuleAttribute(int minValue, int maxValue)
@@ -174,7 +191,6 @@
         public int MinValue { get; set; }
         public int MaxValue { get; set; }
     }
-
     public class RangeRuleHandler : IHandler
     {
         public EvaluatedRule GenerateEvaluatedRule&lt;TConcrete&gt;(BaseRuleAttribute attribute, PropertyInfo targetProp)
@@ -199,4 +215,5 @@
             return typeof(RangeRuleAttribute).IsAssignableFrom(attribute.GetType());
         }
     }
+    </code>
 </pre>
