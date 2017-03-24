@@ -23,7 +23,7 @@ namespace SimpleRules.Handlers
             return new EvaluatedRule
             {
                 RuleType = RuleType.Error,
-                MessageFormat = string.Format("{0} does not match the expected format ({1})", targetProp.Name, regexAttr.RegularExpression),
+                MessageFormat = string.Format("{0} does not match the expected format", targetProp.Name.AddSpaces(), regexAttr.RegularExpression),
                 Expression = expression
             };
         }

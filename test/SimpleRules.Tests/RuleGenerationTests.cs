@@ -113,7 +113,7 @@ namespace SimpleRules.Tests
                                         .Validate<Code>(codes);
             Assert.AreEqual(1, validationResults.Count());
             Assert.AreEqual(1, validationResults.First().Errors.Count());
-            Assert.AreEqual("Value does not match the expected format (\\d+)", validationResults.First().Errors[0]);
+            Assert.AreEqual("Value does not match the expected format", validationResults.First().Errors[0]);
             codes = new List<Code>
             {
                 new Code { Value = "123" }
