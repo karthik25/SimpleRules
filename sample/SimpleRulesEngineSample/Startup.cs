@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SimpleRules;
+using SimpleRulesEngineSample.Entities;
 
 namespace SimpleRulesEngineSample
 {
@@ -33,7 +34,10 @@ namespace SimpleRulesEngineSample
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            var simpleRulesEngine = new SimpleRulesEngine();
+            var simpleRulesEngine = new SimpleRulesEngine()
+                                        .DiscoverHandlers(new [] { typeof(Startup) })
+                                        .RegisterMetadata<Registration, RegistrationMetadata>()
+                                        .RegisterMetadata<Activity, ActivityMetadata>();
             services.AddSingleton(typeof (SimpleRulesEngine), simpleRulesEngine);
 
             services.AddMvc();

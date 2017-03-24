@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SimpleRules;
 using SimpleRulesEngineSample.Entities;
+using SimpleRulesEngineSample.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +19,7 @@ namespace SimpleRulesEngineSample.Controllers
 
         public IActionResult Index()
         {
+            var model = new ValidationResultsModel();
             var users = new List<User>
             {
                 new User
@@ -28,20 +31,33 @@ namespace SimpleRulesEngineSample.Controllers
                     PhoneNumber = "12345"
                 }
             };
-            var results = _rulesEngine.Validate<User>(users).ToList();
-            return View(results.SelectMany(r => r.Errors).ToList());
+            model.UserValidationResults = _rulesEngine.Validate<User>(users).SelectMany(r => r.Errors);
+            var registrations = new List<Registration>
+            {
+                new Registration
+                {
+                    StartDate = DateTime.Now.AddDays(-3),
+                    EndDate = DateTime.Now.AddDays(-6)
+                }
+            };
+            model.RegistrationValidationResults = _rulesEngine.Validate<Registration>(registrations).SelectMany(r => r.Errors);
+            var activities = new List<Activity>
+            {
+                new Activity
+                {
+                    StartDate = DateTime.Now.AddDays(-3),
+                    EndDate = DateTime.Now.AddDays(-6),
+                    Capacity = 25
+                }
+            };
+            model.ActivityValidationResults = _rulesEngine.Validate<Activity>(activities).SelectMany(r => r.Errors);
+
+            return View(model);
         }
 
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
 
             return View();
         }

@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model SimpleRulesEngineSample.Models.ValidationResultsModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -33,9 +33,170 @@
 
 <div class="well">
     <ul>
-        @foreach (var item in Model)
+        @foreach (var item in Model.UserValidationResults)
         {
             <li>@item</li>
         }
     </ul>
 </div>
+
+<hr />
+
+<div>
+    Given the following class with corresponding class for metadata,
+</div>
+<br />
+
+<pre>
+    public class Registration
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+    }
+
+    public class RegistrationMetadata
+    {
+        public DateTime StartDate { get; set; }
+        [GreaterThan("StartDate", canBeNull: true)]
+        public DateTime? EndDate { get; set; }
+    }
+
+</pre>
+
+<div>
+    The validation results are:
+</div>
+
+<br />
+
+<div class="well">
+    <ul>
+        @foreach (var item in Model.RegistrationValidationResults)
+        {
+            <li>@item</li>
+        }
+    </ul>
+</div>
+
+<div>
+    Metadata registration is done during the initial setup in Startup.cs, as shown below:
+</div>
+
+<br />
+
+<pre>
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // ...
+        var simpleRulesEngine = new SimpleRulesEngine()
+                                    .RegisterMetadata&lt;Registration, RegistrationMetadata&gt;();
+        services.AddSingleton(typeof (SimpleRulesEngine), simpleRulesEngine);
+        // ...
+    }
+</pre>
+
+<hr />
+
+<div>
+    Given the following class with corresponding class for metadata,
+</div>
+<br />
+
+<pre>
+    public class Activity
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int Capacity { get; set; }
+    }
+
+    public class ActivityMetadata
+    {
+        public DateTime StartDate { get; set; }
+        [GreaterThan("StartDate", canBeNull: true)]
+        public DateTime? EndDate { get; set; }
+        [RangeRule(10, 20)]
+        public int Capacity { get; set; }
+    }
+</pre>
+
+<div>
+    The validation results are:
+</div>
+
+<br />
+
+<div class="well">
+    <ul>
+        @foreach (var item in Model.ActivityValidationResults)
+        {
+            <li>@item</li>
+        }
+    </ul>
+</div>
+
+<div>
+    Metadata registration is done during the initial setup in Startup.cs, as shown below. Also, notice that custom rules are 
+    registered using the <strong>DiscoverHandlers</strong> extension.
+</div>
+
+<br />
+
+<pre>
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // ...
+        var simpleRulesEngine = new SimpleRulesEngine()
+                                        .DiscoverHandlers(new [] { typeof(Startup) })
+                                        .RegisterMetadata&lt;, RegistrationMetadata&gt;()
+                                        .RegisterMetadata&lt;, ActivityMetadata&gt;();
+        services.AddSingleton(typeof (SimpleRulesEngine), simpleRulesEngine);
+        // ...
+    }
+</pre>
+
+<br />
+
+<div>
+    Given below is the implementation of the custom <strong>RangeRule</strong>
+</div>
+
+<br />
+
+<pre>
+    public class RangeRuleAttribute : BaseRuleAttribute
+    {
+        public RangeRuleAttribute(int minValue, int maxValue)
+        {
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
+        public int MinValue { get; set; }
+        public int MaxValue { get; set; }
+    }
+
+    public class RangeRuleHandler : IHandler
+    {
+        public EvaluatedRule GenerateEvaluatedRule&lt;TConcrete&gt;(BaseRuleAttribute attribute, PropertyInfo targetProp)
+        {
+            var rangeAttr = attribute as RangeRuleAttribute;
+            var input = Expression.Parameter(typeof(TConcrete), "a");
+            var propName = targetProp.Name;
+            var comparison = Expression.And(
+                    Expression.GreaterThan(Expression.PropertyOrField(input, propName), Expression.Constant(rangeAttr.MinValue)),
+                    Expression.LessThan(Expression.PropertyOrField(input, propName), Expression.Constant(rangeAttr.MaxValue))
+                );
+            var lambda = Expression.Lambda(comparison, input);
+            return new EvaluatedRule
+            {
+                MessageFormat = string.Format("{0} should be between {1} and {2}", propName, rangeAttr.MinValue, rangeAttr.MaxValue),
+                RuleType = RuleType.Error,
+                Expression = lambda
+            };
+        }
+        public bool Handles(BaseRuleAttribute attribute)
+        {
+            return typeof(RangeRuleAttribute).IsAssignableFrom(attribute.GetType());
+        }
+    }
+</pre>
