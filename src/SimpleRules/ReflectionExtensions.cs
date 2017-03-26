@@ -9,11 +9,11 @@ namespace SimpleRules
     {
         public static IEnumerable<Type> FindHandlerTypesInAssemblies(this Type[] assemblyMarkerTypes)
         {
-            var assemblies = assemblyMarkerTypes.Select(a => a.GetTypeInfo().Assembly);
+            var assemblies = assemblyMarkerTypes.Select(a => a.GetAssembly());
             var handlerTypes = assemblies
                                     .SelectMany(a => a.GetTypes())
                                     .Where(a => typeof(IHandler).IsAssignableFrom(a) && 
-                                                !a.GetTypeInfo().IsInterface);
+                                                !a.IsInterface());
             return handlerTypes;
         }
 

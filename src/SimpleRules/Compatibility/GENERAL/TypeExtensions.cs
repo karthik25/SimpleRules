@@ -6,28 +6,19 @@ namespace SimpleRules
 {
     public static class TypeExtensions
     {
-        internal static TypeInfo GetTypeInfo(this Type type)
+        public static bool IsInterface(this Type type)
         {
-            return new TypeInfo(type);
+            return type.IsInterface;
         }
-    }
-}
 
-namespace System.Reflection
-{
-    internal class TypeInfo
-    {
-        private readonly Type type;
-
-        public bool IsGenericType => type.IsGenericType;
-
-        public bool IsInterface => type.IsInterface;
-
-        public Assembly Assembly => type.Assembly;
-
-        public TypeInfo(Type type)
+        public static bool IsGenericType(this Type type)
         {
-            this.type = type;
+            return type.IsGenericType;
+        }
+
+        public static Assembly GetAssembly(this Type type)
+        {
+            return type.Assembly;
         }
     }
 }

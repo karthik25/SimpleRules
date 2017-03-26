@@ -7,6 +7,21 @@ namespace SimpleRules
 {
     public static class TypeExtensions
     {
+        public static bool IsInterface(this Type type)
+        {
+            return type.GetTypeInfo().IsInterface;
+        }
+
+        public static bool IsGenericType(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericType;
+        }
+
+        public static Assembly GetAssembly(this Type type)
+        {
+            return type.GetTypeInfo().Assembly;
+        }
+
         public static IEnumerable<T> GetCustomAttributes<T>(this Type type, bool inherit = false)
             where T:Attribute
         {
@@ -22,11 +37,6 @@ namespace SimpleRules
         public static bool IsAssignableFrom(this Type type, Type type2)
         {
             return type.GetTypeInfo().IsAssignableFrom(type2);
-        }
-
-        internal static System.Reflection.TypeInfo GetTypeInfo(this Type type)
-        {
-            return type.GetTypeInfo();
         }
     }
 }

@@ -63,7 +63,7 @@ namespace SimpleRules
 
         public static bool IsNullable(this PropertyInfo propertyInfo)
         {
-            return propertyInfo.PropertyType.GetTypeInfo().IsGenericType && 
+            return propertyInfo.PropertyType.IsGenericType() && 
                    propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
     }
