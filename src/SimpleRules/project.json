@@ -1,14 +1,42 @@
 ﻿{
   "version": "1.0.0-*",
 
-  "dependencies": {
-    "NETStandard.Library": "1.6.0",
-    "System.Reflection": "4.0.10"
-  },
-
   "frameworks": {
+    "net45": {
+      "buildOptions": {
+        "define": [ "GENERAL" ]
+      }
+    },
+    "net451": {
+      "buildOptions": {
+        "define": [ "GENERAL" ]
+      }
+    },
+    "net452": {
+      "buildOptions": {
+        "define": [ "GENERAL" ]
+      }
+    },
     "net461": {
-
+      "buildOptions": {
+        "define": [ "GENERAL" ]
+      },
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Reflection": "4.0.10"
+      }
+    },
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "Microsoft.CSharp": "4.0.1",
+        "System.Reflection.TypeExtensions": "4.1.0"
+      }
     }
   }
 }
+//Just move the tests in to SimpleRules.Tests
