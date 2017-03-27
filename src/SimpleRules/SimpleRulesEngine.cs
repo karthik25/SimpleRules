@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using SimpleRules.Contracts;
 using SimpleRules.Exceptions;
-using System.Linq.Expressions;
 using System.Collections.Generic;
 
 namespace SimpleRules
@@ -29,7 +28,7 @@ namespace SimpleRules
                 var validationResult = new ValidationResult { Key = entityKeyCache.GetEntityKey(s) };
                 foreach (var rule in rules)
                 {
-                    var compiledExpression = GetCompiledRule<TConcrete>(rule.Expression);
+                    var compiledExpression = GetFunc<TConcrete>(rule.Delegate);
                     if (!compiledExpression(s))
                         validationResult.Add(rule.MessageFormat, rule.RuleType);
                 }
@@ -95,12 +94,6 @@ namespace SimpleRules
         private void AddDefaultHandlers()
         {
             this.DiscoverHandlers(typeof (SimpleRulesEngine));
-        }
-
-        private static Func<TConcrete, bool> GetCompiledRule<TConcrete>(LambdaExpression expression)
-            where TConcrete : class
-        {
-            return GetFunc<TConcrete>(expression.Compile());
         }
 
         private static Func<TConcrete, bool> GetFunc<TConcrete>(Delegate funcDelegate)
