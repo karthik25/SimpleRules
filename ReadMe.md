@@ -151,16 +151,79 @@ The `Func` given below explains the intended effect I wish to achieve. Given an 
 Func<Activity, boo> func = a => a.Capacity > 10 && a.Capacity < 30;
 ```
 
-The return value of the `GenerateEvaluatedRule` method needs to return an object of type `EvaluatedRule` which contains the evaluated rule itself along with other additional properties to help the core rules engine decide on things, like the message to be displayed if the rule is not met and whether its an error or a warning.
+The return value of the `GenerateEvaluatedRule` method needs to return an object of type `EvaluatedRule` which contains the evaluated rule itself along with other additional properties to help the core rules engine decide on things, like the message to be displayed if the rule is not met and whether its an error or a warning. Its not over once you create the rule attribute and the handler. You need to register it with the rules engine. More on this is in the next section.
 
 ### Discover Handlers Dynamically Using Assembly Markers
 
-ToDo
+In the previous section you saw have new rules/handlers can be defined. In order to put them to use, there are couple of ways. First one is by registering it with the rules engine as shown below:
+
+```csharp
+var activities = new List<Activity> { new Activity { Id = 1, Name = "Indoor", Capcaity = 45 } };
+var engine = new SimpleRulesEngine()
+                .RegisterCustomRule<RangeRuleHandler>();
+var results = engine.Validate<Activity>(acitivities);
+```
+
+This might get tedious if you have multiple handlers defined. So, in order to let the rules engine automatically discover the handlers defined, use the `DiscoverHandlers` method, as shown below:
+
+```csharp
+var engine = new SimpleRulesEngine()
+                .DiscoverHandlers(new[] { typeof(Marker) });                
+```
+
+`Marker` is simply a class that exists in the assembly that contains the defined handlers. With this method called, the handlers are all automatically discovered and registered!
 
 ### Create new Rules for Existing Handlers
 
-ToDo
+Its also possible to extend existing rules in order to support reuse. For example, consider the `MatchRegexRule`. This can be used to validate the value of a property against a regular expression. There are already rules like the `EmailMatchRegexRule`, `UsPhoneNumberRegex` etc to validate properties, but you can create your own rules based on this too. For example, the following code creates a rule that validates a password. I lifted the password validation regex straight out of google and it validates if the "password matching expression. match all alphanumeric character and predefined wild characters. password must consists of at least 8 characters and not more than 15 characters."
+
+```csharp
+public class PasswordMatchRegexAttribute : MatchRegexAttribute
+{
+    public PasswordMatchRegexAttribute()
+        : base(@"^([a-zA-Z0-9@*#]{8,15})$")
+    {
+    }
+}
+```
+
+With this rule you can validate a class that contains this rule decorated on a particular property.
 
 ### Usage in a .Net Core MVC Project
 
-ToDo
+The sample project provided in the solution has an example of how the rules engine can be used in a MVC project. This section provides a quick introduction of the same. In this case, the `Startup` class is used to create an instance of the rules engine as a singleton and configured in the `ConfigureServices` method, as shown below:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    // ...
+    var simpleRulesEngine = new SimpleRulesEngine()
+                                .DiscoverHandlers(new [] { typeof(Startup) })
+                                .RegisterMetadata<Registration, RegistrationMetadata>()
+                                .RegisterMetadata<Activity, ActivityMetadata>();
+    services.AddSingleton(typeof (SimpleRulesEngine), simpleRulesEngine);
+    // ...
+}
+```
+
+With this done, the SimpleRulesEngine can be injected in to any controller where you intend to do validation, like it is done in the case of the `HomeController`.
+
+```csharp
+public class HomeController : Controller
+{
+    private readonly SimpleRulesEngine _rulesEngine;
+
+    public HomeController(SimpleRulesEngine rulesEngine)
+    {
+        _rulesEngine = rulesEngine;
+    }
+
+    // ...
+}
+```
+
+### Contributing
+
+If you would like to contribute to this project, please do :) There are no guidelines at this point, since its early and I need to come up with one :)
+
+Happy coding!
