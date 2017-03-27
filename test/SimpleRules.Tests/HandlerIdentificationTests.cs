@@ -53,7 +53,7 @@ namespace SimpleRules.Tests
             var greaterThanAttribute = new GreaterThanAttribute("StartDate");
             var evaluatedRule = handler.GenerateEvaluatedRule<Registration>(greaterThanAttribute, targetProp);
             Assert.IsNotNull(evaluatedRule);
-            Assert.AreEqual("End Date should be Greater Than the Start Date", evaluatedRule.MessageFormat);
+            Assert.AreEqual("End Date should be Greater Than the Start Date.", evaluatedRule.MessageFormat);
             Assert.IsNotNull(evaluatedRule.Expression);
         }
 
@@ -71,7 +71,7 @@ namespace SimpleRules.Tests
             var validationResult = validationResults.First();
             Assert.AreEqual(2, validationResult.Errors.Count);
             Assert.AreEqual("Capacity should be between 10 and 30", validationResult.Errors[1]);
-            Assert.AreEqual("End Date should be Greater Than the Start Date", validationResult.Errors[0]);
+            Assert.AreEqual("End Date should be Greater Than the Start Date.", validationResult.Errors[0]);
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@ namespace SimpleRules.Tests
             var validationResult = validationResults.First();
             Assert.AreEqual(2, validationResult.Errors.Count);
             Assert.AreEqual("Capacity should be between 10 and 30", validationResult.Errors[1]);
-            Assert.AreEqual("End Date should be Greater Than the Start Date", validationResult.Errors[0]);
+            Assert.AreEqual("End Date should be Greater Than the Start Date.", validationResult.Errors[0]);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace SimpleRules.Tests
             var validationResult = validationResults.First();
             Assert.AreEqual(2, validationResult.Errors.Count);
             Assert.AreEqual("Capacity should be between 10 and 30", validationResult.Errors[1]);
-            Assert.AreEqual("End Date should be Greater Than the Start Date", validationResult.Errors[0]);
+            Assert.AreEqual("End Date should be Greater Than the Start Date.", validationResult.Errors[0]);
         }
     }
 
