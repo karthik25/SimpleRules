@@ -200,6 +200,7 @@
         }
     </ul>
 </div>
+
 <div>
     Metadata registration is done during the initial setup in Startup.cs, as shown below. Also, notice that custom rules are 
     registered using the <strong>DiscoverHandlers</strong> extension.
@@ -265,3 +266,74 @@
     }
     </code>
 </pre>
+
+<div>
+    And finally a class with a number of validation rules!
+</div>
+
+<br />
+
+<pre>
+    <code class="csharp">
+    public class Student
+    {
+        public int Id { get; set; }
+        [MatchRegex("(^\d{3}-?\d{2}-?\d{4}$|^XXX-XX-XXXX$)")]
+        public string Ssn { get; set; }
+        [EmailMatchRegex]
+        public string EmailAddress { get; set; }
+        [LessThan("StartDate")]
+        public DateTime RegistrationDate { get; set; }
+        public DateTime StartDate { get; set; }
+        [LessThan("StartDate", canBeNull: true)]
+        public DateTime? EndDate { get; set; }
+        [LessThan("RegistrationDate")]
+        [LessThan("StartDate")]
+        [LessThan("EndDate")]
+        public DateTime DateOfBirth { get; set; }
+        [RangeRule(2, 4)]
+        public int EnrolledCount { get; set; }
+        [UsPhoneNumberRegex]
+        public string Contact { get; set; }
+    }
+    </code>
+</pre>
+
+<br />
+
+<div>
+    Validated with the following instance:
+</div>
+
+<br />
+
+<pre>
+    <code class="csharp">
+    var student = new Student
+    {
+        Id = 1,
+        Ssn = "12345",
+        EmailAddress = "jdoe",
+        RegistrationDate = DateTime.Now,
+        StartDate = DateTime.Now.AddDays(-1),
+        DateOfBirth = DateTime.Now,
+        EnrolledCount = 5,
+        Contact = "98412"
+    };
+    </code>
+</pre>
+
+<br />
+
+<div>
+    Validation results are:
+</div>
+
+<div class="well">
+    <ul>
+        @foreach (var item in Model.StudentValidationResults)
+        {
+            <li>@item</li>
+        }
+    </ul>
+</div>

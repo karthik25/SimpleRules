@@ -40,6 +40,18 @@ namespace SimpleRulesEngineSample.Controllers
                     Capacity = 25
                 };
             model.ActivityValidationResults = _rulesEngine.Validate<Activity>(activity).Errors;
+            var student = new Student
+            {
+                Id = 1,
+                Ssn = "12345",
+                EmailAddress = "jdoe",
+                RegistrationDate = DateTime.Now,
+                StartDate = DateTime.Now.AddDays(-1),
+                DateOfBirth = DateTime.Now,
+                EnrolledCount = 5,
+                Contact = "98412"
+            };
+            model.StudentValidationResults = _rulesEngine.Validate<Student>(student).Errors;
 
             return View(model);
         }
