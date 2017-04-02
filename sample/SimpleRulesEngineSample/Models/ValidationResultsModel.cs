@@ -8,5 +8,6 @@ namespace SimpleRulesEngineSample.Models
         public IEnumerable<string> RegistrationValidationResults { get; set; }
         public IEnumerable<string> ActivityValidationResults { get; set; }
         public IEnumerable<string> StudentValidationResults { get; set; }
+        public int Key { get; set; }
     }
 }

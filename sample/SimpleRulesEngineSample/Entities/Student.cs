@@ -1,11 +1,13 @@
 ﻿using System;
 using SimpleRules.Generic;
 using SimpleRulesEngineSample.Rules;
+using SimpleRules.Attributes;
 
 namespace SimpleRulesEngineSample.Entities
 {
     public class Student
     {
+        [EntityKey]
         public int Id { get; set; }
         [MatchRegex(@"(^\d{3}-?\d{2}-?\d{4}$|^XXX-XX-XXXX$)")]
         public string Ssn { get; set; }

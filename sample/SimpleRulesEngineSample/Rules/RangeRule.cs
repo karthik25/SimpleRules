@@ -32,7 +32,7 @@ namespace SimpleRulesEngineSample.Rules
             var lambda = Expression.Lambda(comparison, input);
             return new EvaluatedRule
             {
-                MessageFormat = string.Format("{0} should be between {1} and {2}", propName, rangeAttr.MinValue, rangeAttr.MaxValue),
+                MessageFormat = string.Format("{0} should be between {1} and {2}", propName.AddSpaces(), rangeAttr.MinValue, rangeAttr.MaxValue),
                 RuleType = RuleType.Error,
                 Expression = lambda
             };

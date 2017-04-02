@@ -51,7 +51,9 @@ namespace SimpleRulesEngineSample.Controllers
                 EnrolledCount = 5,
                 Contact = "98412"
             };
-            model.StudentValidationResults = _rulesEngine.Validate<Student>(student).Errors;
+            var validationResult = _rulesEngine.Validate<Student>(student);
+            model.StudentValidationResults = validationResult.Errors;
+            model.Key = (int)validationResult.Key;
 
             return View(model);
         }
