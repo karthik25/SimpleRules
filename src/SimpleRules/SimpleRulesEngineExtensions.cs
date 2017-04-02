@@ -14,6 +14,12 @@ namespace SimpleRules
             return engine.Validate(src);
         }
 
+        public static ValidationResult Validate<TConcrete>(this SimpleRulesEngine engine, TConcrete src)
+            where TConcrete : class
+        {
+            return engine.Validate(new List<TConcrete> { src }).First();
+        }
+
         public static bool HasRuleAttributes(this Type type)
         {
             return type.GetProperties(publicPropFlags)

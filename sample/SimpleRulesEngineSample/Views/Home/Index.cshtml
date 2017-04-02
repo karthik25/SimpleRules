@@ -8,11 +8,16 @@
     pre, code {
         background: #272822;
         font-family: monospace;
-        border: 0px
+        border: 0px;
     }
 </style>
 
 <br />
+
+<div>
+    <strong>SimpleRules.Net</strong> is a rules engine that is simple enough to use and extend! It will be evident once you see
+    all the examples below!
+</div>
 
 <div>
     Given the following class with a validation rule set,
@@ -20,7 +25,7 @@
 <br />
 
 <pre>
-    <code class="csharp">
+<code class="csharp">
     public class User
     {
         public string Username { get; set; }
@@ -36,20 +41,38 @@
 </pre>
 
 <div>
-    The validation results are:
+    When the following instance of <i>User</i> is provided as the input:
 </div>
+<br />
+
+<pre>
+    <code class="csharp">
+    var user = new User
+        {
+            Username = "kanant",
+            Password = "password123",
+            ConfirmPassword = "password1234",
+            EmailAddress = "kanant",
+            PhoneNumber = "12345"
+        };
+    </code>>
+</pre>
 
 <br />
 
+<div>
+    The validation results are:
+</div>
+<br />
+
 <div class="well">
-    <ul>
+<ul>
         @foreach (var item in Model.UserValidationResults)
         {
-            <li>@item</li>
+<li>@item</li>
         }
     </ul>
 </div>
-
 <hr />
 
 <div>
@@ -64,7 +87,6 @@
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
     }
-
     public class RegistrationMetadata
     {
         public DateTime StartDate { get; set; }
@@ -75,28 +97,42 @@
 </pre>
 
 <div>
-    The validation results are:
+    When the following instance of <i>Registration</i> is provided as the input:
 </div>
-
-<br />
-
-<div class="well">
-    <ul>
-        @foreach (var item in Model.RegistrationValidationResults)
-        {
-            <li>@item</li>
-        }
-    </ul>
-</div>
-
-<div>
-    Metadata registration is done during the initial setup in Startup.cs, as shown below:
-</div>
-
 <br />
 
 <pre>
     <code class="csharp">
+    var registration = new Registration
+            {
+                StartDate = DateTime.Now.AddDays(-3),
+                EndDate = DateTime.Now.AddDays(-6)
+            };
+    </code>>
+</pre>
+
+<br />
+
+<div>
+    The validation results are:
+</div>
+<br />
+
+<div class="well">
+<ul>
+        @foreach (var item in Model.RegistrationValidationResults)
+        {
+<li>@item</li>
+        }
+    </ul>
+</div>
+<div>
+    Metadata registration is done during the initial setup in Startup.cs, as shown below:
+</div>
+<br />
+
+<pre>
+<code class="csharp">
     public void ConfigureServices(IServiceCollection services)
     {
         // ...
@@ -107,7 +143,6 @@
     }
     </code>
 </pre>
-
 <hr />
 
 <div>
@@ -116,7 +151,7 @@
 <br />
 
 <pre>
-    <code class="csharp">
+<code class="csharp">
     public class Activity
     {
         public DateTime StartDate { get; set; }
@@ -135,29 +170,44 @@
 </pre>
 
 <div>
-    The validation results are:
+    When the following instance of <i>Activity</i> is provided as the input:
 </div>
-
-<br />
-
-<div class="well">
-    <ul>
-        @foreach (var item in Model.ActivityValidationResults)
-        {
-            <li>@item</li>
-        }
-    </ul>
-</div>
-
-<div>
-    Metadata registration is done during the initial setup in Startup.cs, as shown below. Also, notice that custom rules are 
-    registered using the <strong>DiscoverHandlers</strong> extension.
-</div>
-
 <br />
 
 <pre>
     <code class="csharp">
+    var activity = new Activity
+        {
+            StartDate = DateTime.Now.AddDays(-3),
+            EndDate = DateTime.Now.AddDays(-6),
+            Capacity = 25
+        };
+    </code>>
+</pre>
+
+<br />
+
+<div>
+    The validation results are:
+</div>
+<br />
+
+<div class="well">
+<ul>
+        @foreach (var item in Model.ActivityValidationResults)
+        {
+<li>@item</li>
+        }
+    </ul>
+</div>
+<div>
+    Metadata registration is done during the initial setup in Startup.cs, as shown below. Also, notice that custom rules are 
+    registered using the <strong>DiscoverHandlers</strong> extension.
+</div>
+<br />
+
+<pre>
+<code class="csharp">
     public void ConfigureServices(IServiceCollection services)
     {
         // ...
@@ -170,17 +220,15 @@
     }
     </code>
 </pre>
-
 <br />
 
 <div>
     Given below is the implementation of the custom <strong>RangeRule</strong>
 </div>
-
 <br />
 
 <pre>
-    <code class="csharp">
+<code class="csharp">
     public class RangeRuleAttribute : BaseRuleAttribute
     {
         public RangeRuleAttribute(int minValue, int maxValue)

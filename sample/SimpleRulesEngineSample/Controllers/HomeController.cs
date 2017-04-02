@@ -20,37 +20,28 @@ namespace SimpleRulesEngineSample.Controllers
         public IActionResult Index()
         {
             var model = new ValidationResultsModel();
-            var users = new List<User>
-            {
-                new User
+            var user = new User
                 {
                     Username = "kanant",
                     Password = "password123",
                     ConfirmPassword = "password1234",
                     EmailAddress = "kanant",
                     PhoneNumber = "12345"
-                }
-            };
-            model.UserValidationResults = _rulesEngine.Validate<User>(users).SelectMany(r => r.Errors);
-            var registrations = new List<Registration>
-            {
-                new Registration
+                };
+            model.UserValidationResults = _rulesEngine.Validate<User>(user).Errors;
+            var registration = new Registration
                 {
                     StartDate = DateTime.Now.AddDays(-3),
                     EndDate = DateTime.Now.AddDays(-6)
-                }
-            };
-            model.RegistrationValidationResults = _rulesEngine.Validate<Registration>(registrations).SelectMany(r => r.Errors);
-            var activities = new List<Activity>
-            {
-                new Activity
+                };
+            model.RegistrationValidationResults = _rulesEngine.Validate<Registration>(registration).Errors;
+            var activity = new Activity
                 {
                     StartDate = DateTime.Now.AddDays(-3),
                     EndDate = DateTime.Now.AddDays(-6),
                     Capacity = 25
-                }
-            };
-            model.ActivityValidationResults = _rulesEngine.Validate<Activity>(activities).SelectMany(r => r.Errors);
+                };
+            model.ActivityValidationResults = _rulesEngine.Validate<Activity>(activity).Errors;
 
             return View(model);
         }
