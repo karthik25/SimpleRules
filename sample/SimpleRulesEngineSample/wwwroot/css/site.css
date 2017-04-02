@@ -36,3 +36,8 @@ textarea {
     display: none
   }
 }
+
+.logo-inner {
+    color: #F92651;
+    font-weight: bold
+}
