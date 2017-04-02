@@ -3,8 +3,6 @@ using SimpleRules;
 using SimpleRulesEngineSample.Entities;
 using SimpleRulesEngineSample.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SimpleRulesEngineSample.Controllers
 {
@@ -44,13 +42,6 @@ namespace SimpleRulesEngineSample.Controllers
             model.ActivityValidationResults = _rulesEngine.Validate<Activity>(activity).Errors;
 
             return View(model);
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
         }
 
         public IActionResult Error()
