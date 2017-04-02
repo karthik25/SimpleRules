@@ -40,7 +40,7 @@ namespace SimpleRules
         }
         
         public static IEnumerable<Tuple<BaseRuleAttribute, PropertyInfo>> GetRules(this Type srcType)
-        {            
+        {
             var attrList = srcType.GetProperties(publicPropFlags)
                                   .SelectMany(c => c.GetCustomAttributes<BaseRuleAttribute>(), (prop, attr) => new { prop, attr })
                                   .Select(p => new Tuple<BaseRuleAttribute, PropertyInfo>(p.attr, p.prop));

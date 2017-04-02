@@ -150,6 +150,35 @@ namespace SimpleRules.Tests
             Assert.AreEqual(1, validationResults.Count());
             Assert.AreEqual(0, validationResults.First().Errors.Count());
         }
+
+        [TestMethod]
+        public void CanIdentifyNullableOtherProperty()
+        {
+            var students = new List<Student>
+            {
+                new Student
+                {
+                    StartDate = DateTime.Now.AddDays(-5),
+                    EndDate = DateTime.Now,
+                    DateOfBirth = DateTime.Now.AddDays(1)
+                }
+            };
+            var validationResults = new SimpleRulesEngine()
+                                        .Validate<Student>(students);
+            Assert.AreEqual(1, validationResults.Count());
+            var first = validationResults.First();
+            Assert.AreEqual(1, first.Errors.Count());
+            Assert.AreEqual("Date Of Birth should be Less Than the End Date.", first.Errors[0]);
+        }
+    }
+
+    public class Student
+    {
+        public int Id { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        [LessThan("EndDate")]
+        public DateTime DateOfBirth { get; set; }
     }
 
     public class User

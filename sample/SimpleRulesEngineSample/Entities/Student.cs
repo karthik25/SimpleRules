@@ -8,6 +8,7 @@ namespace SimpleRulesEngineSample.Entities
     public class Student
     {
         [EntityKey]
+        [GreaterThan("", constantValue: 100)]
         public int Id { get; set; }
         [MatchRegex(@"(^\d{3}-?\d{2}-?\d{4}$|^XXX-XX-XXXX$)")]
         public string Ssn { get; set; }
@@ -20,7 +21,7 @@ namespace SimpleRulesEngineSample.Entities
         public DateTime? EndDate { get; set; }
         [LessThan("RegistrationDate")]
         [LessThan("StartDate")]
-        //[LessThan("EndDate")]
+        [LessThan("EndDate")]
         public DateTime DateOfBirth { get; set; }
         [RangeRule(2, 4)]
         public int EnrolledCount { get; set; }

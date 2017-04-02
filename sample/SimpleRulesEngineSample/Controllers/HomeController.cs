@@ -49,7 +49,8 @@ namespace SimpleRulesEngineSample.Controllers
                 StartDate = DateTime.Now.AddDays(-1),
                 DateOfBirth = DateTime.Now,
                 EnrolledCount = 5,
-                Contact = "98412"
+                Contact = "98412",
+                EndDate = DateTime.Now.AddDays(3)
             };
             var validationResult = _rulesEngine.Validate<Student>(student);
             model.StudentValidationResults = validationResult.Errors;

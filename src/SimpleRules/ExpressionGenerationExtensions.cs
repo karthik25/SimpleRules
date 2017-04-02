@@ -48,9 +48,10 @@ namespace SimpleRules
         public static BinaryExpression CreateBinaryExpression(this Expression leftExpr, 
                                                                    Expression rightExpr, 
                                                                    ExpressionType exprType, 
-                                                                   PropertyInfo propertyInfo)
+                                                                   PropertyInfo propertyInfo,
+                                                                   PropertyInfo otherPropInfo = null)
         {
-            var isNullable = propertyInfo.IsNullable();
+            var isNullable = propertyInfo.IsNullable() || (otherPropInfo != null ? otherPropInfo.IsNullable() : true);
             var propType = propertyInfo.PropertyType;
             var leftExprFinal = isNullable ? Expression.Convert(leftExpr, propertyInfo.PropertyType) : leftExpr;
             var rightExprFinal = isNullable ? Expression.Convert(rightExpr, propertyInfo.PropertyType) : rightExpr;
