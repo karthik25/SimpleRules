@@ -112,14 +112,14 @@ namespace SimpleRules.Tests
             };
             var validationResults = engine.Validate<JobWithNull>(jobs);
             Assert.AreEqual(1, validationResults.Count());
-            Assert.AreEqual("Capacity should be Less Than the Max Capacity. Or Less Than 30. It can also be null.", validationResults.First().Errors[0]);
+            Assert.AreEqual("Capacity should be Less Than the Max Capacity. Or Capacity can be Less Than 30. It can also be null.", validationResults.First().Errors[0]);
             var jobsWithConst = new List<JobWithOnlyConstant>
             {
                 new JobWithOnlyConstant { MaxCapacity = 15, Capacity = 40 }
             };
             var validationResultsConst = engine.Validate<JobWithOnlyConstant>(jobsWithConst);
             Assert.AreEqual(1, validationResultsConst.Count());
-            Assert.AreEqual("Capacity should be Less Than the Max Capacity. Or Less Than 30.", validationResultsConst.First().Errors[0]);
+            Assert.AreEqual("Capacity should be Less Than the Max Capacity. Or Capacity can be Less Than 30.", validationResultsConst.First().Errors[0]);
             var jobsWithNull = new List<JobWithOnlyNull>
             {
                 new JobWithOnlyNull { MaxCapacity = 15, Capacity = 40 }

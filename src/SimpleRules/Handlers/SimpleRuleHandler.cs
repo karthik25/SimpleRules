@@ -37,7 +37,7 @@ namespace SimpleRules.Handlers
                 var constantValue = Expression.Constant(relationalAttr.ConstantValue);
                 BinaryExpression finalExpr = leftExpr.CreateBinaryExpression(constantValue, relationalAttr.SupportedType, targetProp);                
                 expressions.Add(finalExpr);
-                messages.Add(string.Format("Or {0} {1}.", relationalAttr.SupportedType.ToString().AddSpaces(), relationalAttr.ConstantValue));
+                messages.Add(string.Format("Or {0} can be {1} {2}.", targetProp.Name.AddSpaces(), relationalAttr.SupportedType.ToString().AddSpaces(), relationalAttr.ConstantValue));
             }
             if (!string.IsNullOrEmpty(relationalAttr.OtherPropertyName))
             {
