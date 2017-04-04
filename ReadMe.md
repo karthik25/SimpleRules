@@ -6,7 +6,7 @@ SimpleRules.Net can be used in console, web applications or anything else for th
 
 ### Terminology
 
-Before we get on with anything, I would like to define some terminology that will be used across the build. Consider the snippet below:
+Before we get on with anything, I would like to define some terminology that will be used across this file. Consider the snippet below:
 
 ```csharp
 public class User
@@ -37,7 +37,7 @@ public class User
 }
 ```
 
-As evident from the snippet above, all you had to do was decorate the `ConfirmPassword` property with the `EqualTo` attribute, by passing in the name of the property that has to be matched with, in this case `Password`. And for the `EmailAddress` and `PhoneNumber` properties, use the in-built `EmailMatchRegex` and `UsPhoneNumberRegex` properties! With this done, when you have an instance of user, it can be validated as shown below:
+As evident from the snippet above, all you had to do was decorate the `ConfirmPassword` property with the `EqualTo` attribute, by passing in the name of the property that has to be matched with, in this case `Password`. And for the `EmailAddress` and `PhoneNumber` properties, use the in-built `EmailMatchRegex` and `UsPhoneNumberRegex` attributes! With this done, when you have an instance of user, it can be validated as shown below:
 
 ```csharp
 var user = new User { 
@@ -48,7 +48,15 @@ var user = new User {
      PhoneNumber = "123" 
 };
 var simpleRulesEngine = new SimpleRulesEngine();
-var result = simpleRulesEngine.Validate(new List<User> { user });
+var result = simpleRulesEngine.Validate(user);
+```
+
+Needless to say, you can also pass in a list in order to validate multiple entities of `User` objects. An illustration is shown below:
+
+```csharp
+var users = ...; // Method that returns a list of users: List<User>
+var simpleRulesEngine = new SimpleRulesEngine();
+var results = simpleRulesEngine.Validate(users);
 ```
 
 The result will be a `ValidationResult` that contains an `Errors` property with 3 errors in this case - one each for mismatching passwords, invalid email address and invalid phone number. That's it! It's that simple! In the next section, you will see how the rule metadata can be seperated out of the class to keep the entities and the rules separate!
@@ -83,7 +91,7 @@ public class UserMetadata
 }
 ```
 
-When you make the same call to `Validate` as before with a list of users, you will get the same results as before, an `Errors` property with 3 errors! There is more, move on to the next topic!
+As of now the rule metadata class has to contain the same set of properties (or more) that are present in the class that you intend to validate (`User`). And with respect to the data types, it can also be just an `object`. When you make the same call to `Validate` as before with a list of users, you will get the same results as before, an `Errors` property with 3 errors! There is more, move on to the next topic!
 
 ### Specify Metadata During Setup
 
@@ -99,7 +107,7 @@ var user = new User {
 };
 var simpleRulesEngine = new SimpleRulesEngine()
                             .RegisterMetadata<User, UserMetadata>();
-var result = simpleRulesEngine.Validate(new List<User> { user });
+var result = simpleRulesEngine.Validate(user);
 ```
 
 The result of the validation is just the same as discussed before! Okay, we have seen enough of validation. Lets move on to possibilities of extending the rules engine using custom rules. That's next!
@@ -139,7 +147,7 @@ public class RangeRuleHandler : IHandler
         var lambda = Expression.Lambda(comparison, input);
         return new EvaluatedRule
         {
-            MessageFormat = string.Format("{0} should be between {1} and {2}", propName, rangeAttr.MinValue, rangeAttr.MaxValue),
+            MessageFormat = string.Format("{0} should be between {1} and {2}", propName.AddSpaces(), rangeAttr.MinValue, rangeAttr.MaxValue),
             RuleType = RuleType.Error,
             Expression = lambda
         };
@@ -170,7 +178,7 @@ The `Func` given below explains the intended effect I wish to achieve. Given an 
 Func<Activity, boo> func = a => a.Capacity > 10 && a.Capacity < 30;
 ```
 
-The return value of the `GenerateEvaluatedRule` method needs to return an object of type `EvaluatedRule` which contains the evaluated rule itself along with other additional properties to help the core rules engine decide on things, like the message to be displayed if the rule is not met and whether its an error or a warning. Its not over once you create the rule attribute and the handler. You need to register it with the rules engine. More on this is in the next section.
+The return value of the `GenerateEvaluatedRule` method needs to return an object of type `EvaluatedRule` which contains the evaluated rule itself along with other additional properties to help the core rules engine decide on things, like the message to be displayed if the rule is not met and whether its an error or a warning. If you notice the line where the message is constructed, I have used the extension method `AddSpaces` to make the property names readable, rather than being a string of text.  For example `StartDate` will be transformed to "Start Date" and so on. Its not over once you create the rule attribute and the handler. You need to register it with the rules engine. More on this is in the next section.
 
 ### Discover Handlers Dynamically Using Assembly Markers
 
@@ -210,7 +218,7 @@ With this rule you can validate a class that contains this rule decorated on a p
 
 ### Multiple Validation Rules
 
-Needless to say, you can decorate a property with multiple rule attributes in order to validate it against a number of other properties. A sample is shown below:
+You can also decorate a property with multiple rule attributes in order to validate it against a number of other properties. A sample is shown below:
 
 ```csharp
 public class Student
