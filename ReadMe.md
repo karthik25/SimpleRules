@@ -4,6 +4,21 @@ SimpleRules.Net is a rules engine, to be plain and simple, as you guessed probab
 
 SimpleRules.Net can be used in console, web applications or anything else for that matter. The sample included uses an MVC project to demonstrate how to use this library. But its NOT intended to be a replacement for the data annotations features that MVC provides, which are part of the `System.ComponentModel.DataAnnotations` namespace see [Using data annotations](https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6). 
 
+### Terminology
+
+Before we get on with anything, I would like to define some terminology that will be used across the build. Consider the snippet below:
+
+```csharp
+public class User
+{
+    public string Password { get; set; }
+
+    [EqualTo("Password")]
+    public string ConfirmPassword { get; set; }
+}
+```
+In the above class the property that is decorated with the `EqualTo` attribute will be referred to as the "source" and the property identified by the argument to this attribute (`Password` in this case) will be referred to as the "target". For any source there could be multiple targets (i.e. rules).
+
 ### Basic Usage
 
 Lets say you have a User object and you need to validate if the `Password` property matches the `ConfirmPassword` property, `EmailAddress` and `PhoneNumber` properties match their appropriate pattern. Here is what you could do:
@@ -37,6 +52,8 @@ var result = simpleRulesEngine.Validate(new List<User> { user });
 ```
 
 The result will be a `ValidationResult` that contains an `Errors` property with 3 errors in this case - one each for mismatching passwords, invalid email address and invalid phone number. That's it! It's that simple! In the next section, you will see how the rule metadata can be seperated out of the class to keep the entities and the rules separate!
+
+When a rule is applied on a certain property (the source), the data types of the "target" property (or properties) should match that of the source. This is applicable when validating against a constant too. Simply, if the `EqualTo` attribute is applied on a `DateTime` property, the "target" property should also be a `DateTime` (or `DateTime?`).
 
 ### Specify Metadata Using an External Class
 
