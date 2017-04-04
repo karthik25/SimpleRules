@@ -110,7 +110,7 @@ var simpleRulesEngine = new SimpleRulesEngine()
 var result = simpleRulesEngine.Validate(user);
 ```
 
-The result of the validation is just the same as discussed before! Okay, we have seen enough of validation. Lets move on to possibilities of extending the rules engine using custom rules. That's next!
+The result of the validation is just the same as discussed before! Okay, we have seen enough of validation. Note that if you attempt to register the same concrete type, metadata type again, it will throw a `DuplicateMetadataRegistrationException` exception. Lets move on to possibilities of extending the rules engine using custom rules. That's next!
 
 ### Creating Custom Rules
 
