@@ -191,6 +191,34 @@ public class PasswordMatchRegexAttribute : MatchRegexAttribute
 
 With this rule you can validate a class that contains this rule decorated on a particular property.
 
+### Multiple Validation Rules
+
+Needless to say, you can decorate a property with multiple rule attributes in order to validate it against a number of other properties. A sample is shown below:
+
+```csharp
+public class Student
+{
+    [EntityKey]
+    [GreaterThan("", constantValue: 100)]
+    public int Id { get; set; }
+    
+    [LessThan("StartDate")]
+    public DateTime RegistrationDate { get; set; }
+    
+    public DateTime StartDate { get; set; }
+
+    [LessThan("StartDate", canBeNull: true)]
+    public DateTime? EndDate { get; set; }
+
+    [LessThan("RegistrationDate")]
+    [LessThan("StartDate")]
+    [LessThan("EndDate")]
+    public DateTime DateOfBirth { get; set; }
+}
+```
+
+In the above snippet note the `DateOfBirth` property. It has been decorated with 3 validation rules to check whether it is less than 3 other properties: `RegistrationDate`, `StartDate` and `EndDate`.
+
 ### Usage in a .Net Core MVC Project
 
 The sample project provided in the solution has an example of how the rules engine can be used in a MVC project. This section provides a quick introduction of the same. In this case, the `Startup` class is used to create an instance of the rules engine as a singleton and configured in the `ConfigureServices` method, as shown below:
