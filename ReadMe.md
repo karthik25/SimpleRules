@@ -198,7 +198,7 @@ var engine = new SimpleRulesEngine()
                 .DiscoverHandlers(new[] { typeof(Marker) });                
 ```
 
-`Marker` is simply a class that exists in the assembly that contains the defined handlers. With this method called, the handlers are all automatically discovered and registered!
+`Marker` is simply a class that exists in the assembly that contains the defined handlers. With this method called, the handlers are all automatically discovered and registered and note that during the life cycle of the rules engine instance it may be called any number of times (handlers already registered will be ignored).
 
 ### Create new Rules for Existing Handlers
 
