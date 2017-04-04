@@ -2,6 +2,8 @@
 
 SimpleRules.Net is a rules engine, to be plain and simple, as you guessed probably based on the name! You may ask, why do we need another rules engine? Answer is, SimpleRules.Net was born out of a discussion I had at my workplace. The idea was to come up with a library that does not require me or anybody to write a gazillion lines of code and this led to the development of SimpleRules.Net. In order to define rules for a certain class or instance, all you have to do is decorate the class with pre-defined rule attributes. The basic usage section will get you started. And, it does not end there! Check out the sections after the basic usage section to know more!
 
+SimpleRules.Net can be used in console, web applications or anything else for that matter. The sample included uses an MVC project to demonstrate how to use this library. But its NOT intended to be a replacement for the data annotations features that MVC provides, which are part of the `System.ComponentModel.DataAnnotations` namespace see [Using data annotations](https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6). 
+
 ### Basic Usage
 
 Lets say you have a User object and you need to validate if the `Password` property matches the `ConfirmPassword` property, `EmailAddress` and `PhoneNumber` properties match their appropriate pattern. Here is what you could do:
