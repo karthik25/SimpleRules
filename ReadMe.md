@@ -1,8 +1,8 @@
 # SimpleRules.Net
 
-SimpleRules.Net is a rules engine, to be plain and simple, as you guessed probably based on the name! You may ask, why do we need another rules engine? Answer is, SimpleRules.Net was born out of a discussion I had at my workplace. The idea was to come up with a library that does not require me or anybody to write a gazillion lines of code and this led to the development of SimpleRules.Net. In order to define rules for a certain class or instance, all you have to do is decorate the class with pre-defined rule attributes. The basic usage section will get you started. And, it does not end there! Check out the sections after the basic usage section to know more!
+SimpleRules.Net is a rules engine, as you guessed probably based on the name! SimpleRules.Net was born out of a discussion I had at my workplace. The idea was to come up with a library that does not require me or anybody to write a gazillion lines of code to validate a set of instances (a `List<T>` or T specifically) and this led to the development of SimpleRules.Net. In order to define rules for a certain class or instance, all you have to do is decorate the class with pre-defined rule attributes. The basic usage section will get you started. And, it does not end there! Check out the sections after the basic usage section to know more!
 
-SimpleRules.Net can be used in console, web applications or anything else for that matter. The sample included uses an MVC project to demonstrate how to use this library. But its NOT intended to be a replacement for the data annotations features that MVC provides, which are part of the `System.ComponentModel.DataAnnotations` namespace see [Using data annotations](https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6). 
+SimpleRules.Net can be used in console, web applications or anything else for that matter. The sample included uses an MVC project to demonstrate how to use this library. SimpleRules.Net is NOT intended to be a replacement for the data annotations features that MVC provides, which are part of the `System.ComponentModel.DataAnnotations` namespace see [Using data annotations](https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6). 
 
 ### Terminology
 
@@ -17,11 +17,11 @@ public class User
     public string ConfirmPassword { get; set; }
 }
 ```
-In the above class the property that is decorated with the `EqualTo` attribute will be referred to as the "source" and the property identified by the argument to this attribute (`Password` in this case) will be referred to as the "target". For any source there could be multiple targets (i.e. rules).
+In the above class the property that is decorated with the `EqualTo` attribute will be referred to as the **"source"** and the property identified by the argument to this attribute (`Password` in this case) will be referred to as the **"target"**. For any source there could be multiple targets (i.e. rules).
 
 ### Basic Usage
 
-Lets say you have a User object and you need to validate if the `Password` property matches the `ConfirmPassword` property, `EmailAddress` and `PhoneNumber` properties match their appropriate pattern. Here is what you could do:
+Lets say you have a User object and you need to validate if the `Password` property matches the `ConfirmPassword` property and also if the `EmailAddress` and `PhoneNumber` properties match their appropriate pattern, as suggested by their names. Here is what you could do:
 
 ```csharp
 public class User
@@ -51,7 +51,7 @@ var simpleRulesEngine = new SimpleRulesEngine();
 var result = simpleRulesEngine.Validate(user);
 ```
 
-Needless to say, you can also pass in a list in order to validate multiple entities of `User` objects. An illustration is shown below:
+Needless to say, you can also pass in a list in order to validate a list of `User` objects (`List<User>`). An illustration is shown below:
 
 ```csharp
 var users = ...; // Method that returns a list of users: List<User>
@@ -61,7 +61,7 @@ var results = simpleRulesEngine.Validate(users);
 
 The result will be a `ValidationResult` that contains an `Errors` property with 3 errors in this case - one each for mismatching passwords, invalid email address and invalid phone number. That's it! It's that simple! In the next section, you will see how the rule metadata can be seperated out of the class to keep the entities and the rules separate!
 
-When a rule is applied on a certain property (the source), the data types of the "target" property (or properties) should match that of the source. This is applicable when validating against a constant too. Simply, if the `EqualTo` attribute is applied on a `DateTime` property, the "target" property should also be a `DateTime` (or `DateTime?`).
+One important thing to note is that when a rule is applied on a certain property (the source), the data types of the "target" property (or properties) should match that of the source. This is applicable when validating against a constant too. Simply, if the `EqualTo` attribute is applied on a `DateTime` property, the "target" property should also be a `DateTime` (or `DateTime?`).
 
 ### Specify Metadata Using an External Class
 
@@ -243,6 +243,8 @@ public class Student
 ```
 
 In the above snippet note the `DateOfBirth` property. It has been decorated with 3 validation rules to check whether it is less than 3 other properties: `RegistrationDate`, `StartDate` and `EndDate`.
+
+Another thing of interest in the above snippet is the `EntityKey` attribute decorated on the `Id` property. You can use this attribute on a property to indicate that this value has to be returned as the value for the `Key` property in every `ValidationResult` instance returned with the results of the validation of a certain entity.
 
 ### Usage in a .Net Core MVC Project
 
