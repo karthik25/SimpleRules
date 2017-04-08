@@ -1,6 +1,15 @@
 ﻿{
   "version": "1.0.0-*",
 
+  "description": "SimpleRules.Net is a rules engine that works based on attributes decorated on the properties of a class",
+  "authors": [ "Karthik Anant" ],
+  "packOptions": {
+    "tags": [ "rules-engine", "expression-trees", "expressions" ],
+    "licenseUrl": "https://github.com/karthik25/SimpleRules/blob/master/LICENSE.txt",
+    "requireLicenseAcceptance": true,
+    "repository": { "url": "https://github.com/karthik25/SimpleRules", "type": "git" }
+  },
+
   "frameworks": {
     "net45": {
       "buildOptions": {
