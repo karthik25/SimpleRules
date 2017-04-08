@@ -4,6 +4,14 @@ SimpleRules.Net is a rules engine, as you guessed probably based on the name! Si
 
 SimpleRules.Net can be used in console, web applications or anything else for that matter. The sample included uses an MVC project to demonstrate how to use this library. SimpleRules.Net is NOT intended to be a replacement for the data annotations features that MVC provides, which are part of the `System.ComponentModel.DataAnnotations` namespace see [Using data annotations](https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/mvc-music-store/mvc-music-store-part-6). 
 
+### Installation
+
+To install SimpleRules.Net from NuGet, run the following command in the package manager console or from the nuget user interface.
+
+```shell
+PM> Install-Package SimpleRules
+```
+
 ### Terminology
 
 Before we get on with anything, I would like to define some terminology that will be used across this file. Consider the snippet below:
@@ -17,6 +25,7 @@ public class User
     public string ConfirmPassword { get; set; }
 }
 ```
+
 In the above class the property that is decorated with the `EqualTo` attribute will be referred to as the **"source"** and the property identified by the argument to this attribute (`Password` in this case) will be referred to as the **"target"**. For any source there could be multiple targets (i.e. rules).
 
 ### Basic Usage
