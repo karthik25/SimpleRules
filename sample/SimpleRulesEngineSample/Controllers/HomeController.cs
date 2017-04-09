@@ -10,6 +10,7 @@ namespace SimpleRulesEngineSample.Controllers
     {
         private readonly SimpleRulesEngine _rulesEngine;
 
+        // see Startup.cs - ConfigureServices
         public HomeController(SimpleRulesEngine rulesEngine)
         {
             _rulesEngine = rulesEngine;
