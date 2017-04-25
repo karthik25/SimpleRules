@@ -290,7 +290,7 @@ public class HomeController : Controller
 
 ### Internals
 
-If you are interested in the internals, check out my article in [codeproject.com](https://www.codeproject.com/Articles/1181151/SimpleRules-Net-Easy-to-use-Rules-Engine)
+If you are interested in the internals, check out my article in [codeproject.com](https://www.codeproject.com/Articles/1181151/SimpleRules-Net-Easy-to-use-Rules-Engine). Be warned that it's quite lengthy :)
 
 ### Contributing
 
