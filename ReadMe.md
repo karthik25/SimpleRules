@@ -288,6 +288,10 @@ public class HomeController : Controller
 }
 ```
 
+### Internals
+
+If you are interested in the internals, check out my article in [codeproject.com](https://www.codeproject.com/Articles/1181151/SimpleRules-Net-Easy-to-use-Rules-Engine)
+
 ### Contributing
 
 If you would like to contribute to this project, please do :) There are no guidelines at this point, since its early and I need to come up with one :)
